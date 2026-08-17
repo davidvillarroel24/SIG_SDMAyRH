@@ -3,7 +3,9 @@ SIG.Ribbon.addTab({
 
     id:"mapa",
 
-    text:"Mapa"
+    text:"Mapa",
+
+    onShow:()=>SIG.Views.show("map")
 
 });
 
@@ -33,7 +35,7 @@ SIG.Ribbon.addButton(
 
         icon:"bi bi-layers",
 
-        click:()=>alert("Capas")
+        click:()=>SIG.LayerPanel.toggle()
 
     }
 
@@ -51,9 +53,99 @@ SIG.Ribbon.addButton(
 
         icon:"bi bi-arrows-fullscreen",
 
-        click:()=>alert("Zoom")
+        click:()=>SIG.Layers.zoomAll()
 
     }
 
 );
+
+//--------------------------------------------------
+// Pestaña Datos
+//--------------------------------------------------
+
+SIG.Ribbon.addTab({
+
+    id:"datos",
+
+    text:"Datos"
+
+});
+
+SIG.Ribbon.addGroup(
+
+    "datos",
+
+    {
+
+        id:"unidades",
+
+        text:"Unidades"
+
+    }
+
+);
+
+SIG.Ribbon.addButton(
+
+    "datos",
+
+    "unidades",
+
+    {
+
+        text:"Riego",
+
+        icon:"bi bi-table",
+
+        click:()=>SIG.Table.show("UD_RIEGOS")
+
+    }
+
+);
+
+//--------------------------------------------------
+// Pestaña Resumen
+//--------------------------------------------------
+
+SIG.Ribbon.addTab({
+
+    id:"resumen",
+
+    text:"Resumen"
+
+});
+
+SIG.Ribbon.addGroup(
+
+    "resumen",
+
+    {
+
+        id:"unidades",
+
+        text:"Unidades"
+
+    }
+
+);
+
+SIG.Ribbon.addButton(
+
+    "resumen",
+
+    "unidades",
+
+    {
+
+        text:"Riego",
+
+        icon:"bi bi-graph-up",
+
+        click:()=>SIG.Summary.show("UD_RIEGOS")
+
+    }
+
+);
+
+console.log("[script_ribbon_config] cargado");
 </script>

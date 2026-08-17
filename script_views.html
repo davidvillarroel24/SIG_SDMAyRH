@@ -1,0 +1,65 @@
+<script>
+
+//--------------------------------------------------
+// Registro de vistas principales (excluyentes entre sí).
+// Cada botón que abre una vista nueva llama a SIG.Views.show
+// en vez de esconder/mostrar contenedores a mano — evita que
+// dos vistas queden visibles a la vez al ir agregando más.
+//--------------------------------------------------
+
+SIG.Views = (()=>{
+
+    const ids = [
+
+        "map",
+        "sig-table-view",
+        "sig-summary-view"
+
+    ];
+
+    function show(id){
+
+        console.log("[SIG.Views] show:", id);
+
+        ids.forEach(viewId=>{
+
+            const el = document.getElementById(viewId);
+
+            if(!el){
+
+                console.error(
+
+                    "[SIG.Views] No existe en el DOM el elemento:",
+                    viewId,
+                    "— revisar que el archivo view_*.html correspondiente esté copiado en Apps Script."
+
+                );
+
+                return;
+
+            }
+
+            // "block" explícito, no "": sig-table-view/sig-summary-view
+            // tienen display:none puesto en su hoja de estilos (no solo
+            // en línea), así que limpiar el inline style con "" no
+            // alcanza para mostrarlos — la regla del CSS sigue ganando.
+
+            el.style.display =
+
+                viewId === id ? "block" : "none";
+
+        });
+
+    }
+
+    return{
+
+        show
+
+    };
+
+})();
+
+console.log("[SIG.Views] módulo cargado");
+
+</script>

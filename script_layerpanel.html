@@ -10,11 +10,19 @@ SIG.LayerPanel = (()=>{
 
     let count;
 
+    let panel;
+
     //--------------------------------------------------
     // Inicializar
     //--------------------------------------------------
 
     function init(){
+
+        panel=document.getElementById(
+
+            "sig-layers-panel"
+
+        );
 
         body=document.getElementById(
 
@@ -382,12 +390,30 @@ SIG.LayerPanel = (()=>{
     }
 
     //--------------------------------------------------
+    // Mostrar/Ocultar el panel flotante completo
+    //--------------------------------------------------
+
+    function toggle(){
+
+        panel.style.display=
+
+            panel.style.display==="none"
+
+            ?""
+
+            :"none";
+
+    }
+
+    //--------------------------------------------------
 
     return{
 
         init,
 
-        render
+        render,
+
+        toggle
 
     };
 

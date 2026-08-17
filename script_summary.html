@@ -1,0 +1,665 @@
+<script>
+
+SIG.Summary = (()=>{
+
+    let schema = [];
+
+    let rows = [];
+
+    let currentHoja = null;
+
+    let activeFilters = {};
+
+    let chartInstances = [];
+
+    const CHART_COLORS = [
+
+        "#4285F4","#DB4437","#F4B400","#0F9D58",
+        "#46BDC6","#AB47BC","#FF7043","#9E9D24"
+
+    ];
+
+    //--------------------------------------------------
+    // Mostrar el resumen de una hoja UD_ (carga si hace falta)
+    //--------------------------------------------------
+
+    function show(hoja){
+
+        console.log("[SIG.Summary] show:", hoja);
+
+        SIG.Views.show("sig-summary-view");
+
+        if(hoja === currentHoja){
+
+            console.log("[SIG.Summary] ya estaba cargada, no se vuelve a pedir:", hoja);
+
+            return;
+
+        }
+
+        currentHoja = hoja;
+
+        activeFilters = {};
+
+        document.getElementById("sig-summary-title").textContent = hoja;
+
+        console.log("[SIG.Summary] pidiendo SIG_UD_get:", hoja);
+
+        google.script.run
+
+            .withSuccessHandler(render)
+
+            .withFailureHandler(onError)
+
+            .SIG_UD_get(hoja);
+
+    }
+
+    //--------------------------------------------------
+    // Volver al mapa
+    //--------------------------------------------------
+
+    function hide(){
+
+        SIG.Views.show("map");
+
+    }
+
+    //--------------------------------------------------
+    // Campos filtrables (UI = SEL en el esquema)
+    //--------------------------------------------------
+
+    function getFilterFields(){
+
+        return schema.filter(campo => campo.ui === "SEL");
+
+    }
+
+    //--------------------------------------------------
+    // Campos con indicador (ESTADISTICA = SUM/AVG)
+    //--------------------------------------------------
+
+    function getIndicatorFields(){
+
+        return schema.filter(campo =>
+
+            campo.estadistica === "SUM" ||
+            campo.estadistica === "AVG"
+
+        );
+
+    }
+
+    //--------------------------------------------------
+    // Valores únicos de una columna (para poblar un select)
+    //--------------------------------------------------
+
+    function uniqueValues(columna){
+
+        const set = new Set();
+
+        rows.forEach(row=>{
+
+            const value = row[columna];
+
+            if(value !== null && value !== undefined && value !== ""){
+
+                set.add(value);
+
+            }
+
+        });
+
+        return Array.from(set).sort(
+
+            (a,b) => String(a).localeCompare(String(b), "es")
+
+        );
+
+    }
+
+    //--------------------------------------------------
+    // Filas que cumplen los filtros activos
+    //--------------------------------------------------
+
+    function getFilteredRows(){
+
+        return rows.filter(row=>
+
+            Object.entries(activeFilters).every(([columna,valor])=>
+
+                String(row[columna]) === String(valor)
+
+            )
+
+        );
+
+    }
+
+    //--------------------------------------------------
+    // Armar un <select> de filtro para una columna
+    //--------------------------------------------------
+
+    function buildFilterSelect(campo){
+
+        const col = document.createElement("div");
+
+        col.className = "col-6 col-md-3";
+
+        const label = document.createElement("label");
+
+        label.className = "form-label small mb-1";
+
+        label.textContent = campo.etiqueta || campo.columna;
+
+        const select = document.createElement("select");
+
+        select.className = "form-select form-select-sm";
+
+        const optionTodos = document.createElement("option");
+
+        optionTodos.value = "";
+
+        optionTodos.textContent = "Todos";
+
+        select.appendChild(optionTodos);
+
+        uniqueValues(campo.columna).forEach(valor=>{
+
+            const opt = document.createElement("option");
+
+            opt.value = valor;
+
+            opt.textContent = valor;
+
+            select.appendChild(opt);
+
+        });
+
+        select.onchange = ()=>{
+
+            if(select.value){
+
+                activeFilters[campo.columna] = select.value;
+
+            }
+            else{
+
+                delete activeFilters[campo.columna];
+
+            }
+
+            refresh();
+
+        };
+
+        col.appendChild(label);
+
+        col.appendChild(select);
+
+        return col;
+
+    }
+
+    //--------------------------------------------------
+    // Dibujar los filtros (uno por campo UI=SEL del esquema)
+    //--------------------------------------------------
+
+    function renderFilters(){
+
+        const container = document.getElementById(
+
+            "sig-summary-filters"
+
+        );
+
+        container.innerHTML = "";
+
+        getFilterFields().forEach(campo=>{
+
+            container.appendChild(
+
+                buildFilterSelect(campo)
+
+            );
+
+        });
+
+    }
+
+    //--------------------------------------------------
+    // Limpiar todos los filtros
+    //--------------------------------------------------
+
+    function clearFilters(){
+
+        activeFilters = {};
+
+        renderFilters();
+
+        refresh();
+
+    }
+
+    //--------------------------------------------------
+    // Tarjeta de indicador
+    //--------------------------------------------------
+
+    function buildCard(etiqueta, valor){
+
+        const col = document.createElement("div");
+
+        col.className = "col-6 col-md-3";
+
+        const card = document.createElement("div");
+
+        card.className = "card card-body p-2";
+
+        const small = document.createElement("div");
+
+        small.className = "small text-muted";
+
+        small.textContent = etiqueta;
+
+        const big = document.createElement("div");
+
+        big.className = "fs-4 fw-bold";
+
+        big.textContent = valor;
+
+        card.appendChild(small);
+
+        card.appendChild(big);
+
+        col.appendChild(card);
+
+        return col;
+
+    }
+
+    //--------------------------------------------------
+    // Formato numérico local
+    //--------------------------------------------------
+
+    function formatNumber(valor){
+
+        return new Intl.NumberFormat(
+
+            "es-BO",
+
+            { maximumFractionDigits:2 }
+
+        ).format(valor);
+
+    }
+
+    //--------------------------------------------------
+    // Dibujar tarjetas de resumen (según filtros activos)
+    //--------------------------------------------------
+
+    function renderCards(){
+
+        const container = document.getElementById(
+
+            "sig-summary-cards"
+
+        );
+
+        container.innerHTML = "";
+
+        const filteredRows = getFilteredRows();
+
+        container.appendChild(
+
+            buildCard(
+
+                "Registros",
+
+                formatNumber(filteredRows.length)
+
+            )
+
+        );
+
+        getIndicatorFields().forEach(campo=>{
+
+            const valores = filteredRows
+
+                .map(row => Number(row[campo.columna]))
+
+                .filter(valor => !isNaN(valor));
+
+            if(!valores.length){
+
+                return;
+
+            }
+
+            const suma = valores.reduce(
+
+                (a,b) => a+b,
+
+                0
+
+            );
+
+            const resultado =
+
+                campo.estadistica === "AVG"
+
+                ? suma / valores.length
+
+                : suma;
+
+            container.appendChild(
+
+                buildCard(
+
+                    campo.etiqueta || campo.columna,
+
+                    formatNumber(resultado)
+
+                )
+
+            );
+
+        });
+
+    }
+
+    //--------------------------------------------------
+    // Campos con gráfica (GRAFICO = BAR/PIE en el esquema)
+    //--------------------------------------------------
+
+    function getChartFields(){
+
+        return schema.filter(campo =>
+
+            campo.grafico === "BAR" ||
+            campo.grafico === "PIE"
+
+        );
+
+    }
+
+    //--------------------------------------------------
+    // Conteo de filas por cada valor distinto de una columna
+    //--------------------------------------------------
+
+    function countByValue(sourceRows, columna){
+
+        const counts = {};
+
+        sourceRows.forEach(row=>{
+
+            const valor = row[columna];
+
+            if(valor === null || valor === undefined || valor === ""){
+
+                return;
+
+            }
+
+            counts[valor] = (counts[valor] || 0) + 1;
+
+        });
+
+        const labels = Object.keys(counts).sort(
+
+            (a,b) => counts[b] - counts[a]
+
+        );
+
+        return{
+
+            labels,
+
+            data: labels.map(label => counts[label])
+
+        };
+
+    }
+
+    //--------------------------------------------------
+    // Tarjeta con un <canvas> adentro, para una gráfica
+    //--------------------------------------------------
+
+    function buildChartCard(titulo){
+
+        const col = document.createElement("div");
+
+        col.className = "col-12 col-xl-6";
+
+        const card = document.createElement("div");
+
+        card.className = "card shadow-sm";
+
+        const body = document.createElement("div");
+
+        body.className = "card-body";
+
+        const title = document.createElement("h6");
+
+        title.className = "card-title";
+
+        title.textContent = titulo;
+
+        const wrap = document.createElement("div");
+
+        wrap.style.position = "relative";
+
+        wrap.style.height = "260px";
+
+        const canvas = document.createElement("canvas");
+
+        wrap.appendChild(canvas);
+
+        body.appendChild(title);
+
+        body.appendChild(wrap);
+
+        card.appendChild(body);
+
+        col.appendChild(card);
+
+        return{ col, canvas };
+
+    }
+
+    //--------------------------------------------------
+    // Destruir gráficas anteriores antes de redibujar
+    //--------------------------------------------------
+
+    function destroyCharts(){
+
+        chartInstances.forEach(chart => chart.destroy());
+
+        chartInstances = [];
+
+    }
+
+    //--------------------------------------------------
+    // Dibujar gráficas (según filtros activos)
+    //--------------------------------------------------
+
+    function renderCharts(filteredRows){
+
+        const container = document.getElementById(
+
+            "sig-summary-charts"
+
+        );
+
+        destroyCharts();
+
+        container.innerHTML = "";
+
+        getChartFields().forEach(campo=>{
+
+            const { labels, data } = countByValue(
+
+                filteredRows,
+                campo.columna
+
+            );
+
+            // Sin categorías (vacío) o con demasiadas (valores
+            // casi todos distintos, ej. un campo numérico continuo)
+            // no da una gráfica legible — se omite en vez de mostrar ruido.
+
+            if(!labels.length || labels.length > 15){
+
+                return;
+
+            }
+
+            const { col, canvas } = buildChartCard(
+
+                campo.etiqueta || campo.columna
+
+            );
+
+            container.appendChild(col);
+
+            const tipo = campo.grafico === "PIE" ? "doughnut" : "bar";
+
+            chartInstances.push(
+
+                new Chart(canvas, {
+
+                    type: tipo,
+
+                    data: {
+
+                        labels,
+
+                        datasets: [{
+
+                            label: campo.etiqueta || campo.columna,
+
+                            data,
+
+                            backgroundColor: labels.map(
+
+                                (_, i) => CHART_COLORS[i % CHART_COLORS.length]
+
+                            )
+
+                        }]
+
+                    },
+
+                    options: {
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+
+                                display: tipo === "doughnut"
+
+                            }
+
+                        }
+
+                    }
+
+                })
+
+            );
+
+        });
+
+    }
+
+    //--------------------------------------------------
+    // Redibujar tarjetas + gráficas juntas
+    //--------------------------------------------------
+
+    function refresh(){
+
+        renderCards();
+
+        renderCharts(getFilteredRows());
+
+    }
+
+    //--------------------------------------------------
+    // Esquema + filas ya resueltos por el backend
+    //--------------------------------------------------
+
+    function render(resultado){
+
+        console.log(
+
+            "[SIG.Summary] render — columnas de esquema:",
+            resultado.schema.length,
+            "filas:",
+            resultado.rows.length
+
+        );
+
+        schema = resultado.schema;
+
+        rows = resultado.rows;
+
+        renderFilters();
+
+        refresh();
+
+    }
+
+    //--------------------------------------------------
+
+    function onError(error){
+
+        console.error("[SIG.Summary] error en SIG_UD_get:", error);
+
+        alert(
+
+            "No se pudo cargar el resumen: " + error.message
+
+        );
+
+    }
+
+    //--------------------------------------------------
+
+    function init(){
+
+        document
+
+            .getElementById("btn-summary-volver-mapa")
+
+            .onclick = hide;
+
+        document
+
+            .getElementById("btn-summary-limpiar-filtros")
+
+            .onclick = clearFilters;
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        init,
+        show,
+        hide
+
+    };
+
+})();
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    SIG.Summary.init();
+
+});
+
+console.log("[SIG.Summary] módulo cargado");
+
+</script>

@@ -1,0 +1,186 @@
+<script>
+
+SIG.Table = (()=>{
+
+    let dataTable = null;
+
+    let currentHoja = null;
+
+    //--------------------------------------------------
+    // Mostrar la tabla de una hoja UD_ (carga si hace falta)
+    //--------------------------------------------------
+
+    function show(hoja){
+
+        console.log("[SIG.Table] show:", hoja);
+
+        SIG.Views.show("sig-table-view");
+
+        if(hoja === currentHoja){
+
+            console.log("[SIG.Table] ya estaba cargada, no se vuelve a pedir:", hoja);
+
+            return;
+
+        }
+
+        currentHoja = hoja;
+
+        document.getElementById("sig-table-title").textContent = hoja;
+
+        console.log("[SIG.Table] pidiendo SIG_UD_get:", hoja);
+
+        google.script.run
+
+            .withSuccessHandler(render)
+
+            .withFailureHandler(onError)
+
+            .SIG_UD_get(hoja);
+
+    }
+
+    //--------------------------------------------------
+    // Volver al mapa
+    //--------------------------------------------------
+
+    function hide(){
+
+        SIG.Views.show("map");
+
+    }
+
+    //--------------------------------------------------
+    // Columnas visibles en tabla, según el esquema dinámico
+    //--------------------------------------------------
+
+    function buildColumns(schema){
+
+        return schema
+
+            .filter(campo => campo.visibleTabla)
+
+            .map(campo => ({
+
+                data  : campo.columna,
+
+                title : campo.etiqueta || campo.columna
+
+            }));
+
+    }
+
+    //--------------------------------------------------
+    // Dibujar encabezados según las columnas del esquema
+    //--------------------------------------------------
+
+    function buildHead(columnas){
+
+        const headRow = document.getElementById(
+
+            "sig-table-head-row"
+
+        );
+
+        headRow.innerHTML = "";
+
+        columnas.forEach(col=>{
+
+            const th = document.createElement("th");
+
+            th.textContent = col.title;
+
+            headRow.appendChild(th);
+
+        });
+
+    }
+
+    //--------------------------------------------------
+    // Render (esquema + filas ya resueltos por el backend)
+    //--------------------------------------------------
+
+    function render(resultado){
+
+        console.log(
+
+            "[SIG.Table] render — columnas de esquema:",
+            resultado.schema.length,
+            "filas:",
+            resultado.rows.length
+
+        );
+
+        if(dataTable){
+
+            dataTable.destroy();
+
+        }
+
+        const columnas = buildColumns(resultado.schema);
+
+        buildHead(columnas);
+
+        dataTable = $("#sig-table-datatable").DataTable({
+
+            data    : resultado.rows,
+
+            columns : columnas,
+
+            language: {
+
+                url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+
+            }
+
+        });
+
+    }
+
+    //--------------------------------------------------
+
+    function onError(error){
+
+        console.error("[SIG.Table] error en SIG_UD_get:", error);
+
+        alert(
+
+            "No se pudo cargar la tabla: " + error.message
+
+        );
+
+    }
+
+    //--------------------------------------------------
+
+    function init(){
+
+        document
+
+            .getElementById("btn-table-volver-mapa")
+
+            .onclick = hide;
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        init,
+        show,
+        hide
+
+    };
+
+})();
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    SIG.Table.init();
+
+});
+
+console.log("[SIG.Table] módulo cargado");
+
+</script>

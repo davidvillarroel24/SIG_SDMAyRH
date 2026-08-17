@@ -39,13 +39,43 @@
       src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js">
   </script>
 
+  <!-- jQuery + DataTables (Bootstrap 5) -->
+
+  <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+  <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js">
+  </script>
+
+  <script
+      src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js">
+  </script>
+
+  <script
+      src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js">
+  </script>
+
+  <!-- Chart.js -->
+
+  <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js">
+  </script>
+
   <?!= include("style_map"); ?>
+
+  <?!= include("style_table"); ?>
+
+  <?!= include("style_summary"); ?>
 
 </head>
 
 <body>
   
   <?!= include("script_main"); ?>
+
+  <?!= include("script_views"); ?>
 
   <?!= include("component_ribbon"); ?>
   <?!= include("script_component_ribbon"); ?>
@@ -70,7 +100,13 @@
   <?!= include("view_layers"); ?>
   <?!= include("script_layerpanel"); ?>
   <?!= include("script_config"); ?>
-  <?!= include("script_features"); ?>  
+  <?!= include("script_features"); ?>
+
+  <?!= include("view_table"); ?>
+  <?!= include("script_table"); ?>
+
+  <?!= include("view_summary"); ?>
+  <?!= include("script_summary"); ?>
 
 </body>
 

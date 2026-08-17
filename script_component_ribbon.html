@@ -106,6 +106,8 @@ SIG.Ribbon = (()=>{
 
     function show(tabId){
 
+        console.log("[SIG.Ribbon] show tab:", tabId);
+
         current=tabId;
 
         //--------------------------------------------------
@@ -129,6 +131,17 @@ SIG.Ribbon = (()=>{
             });
 
         renderBody();
+
+        //--------------------------------------------------
+        // Una pestaña puede declarar qué hacer al activarse
+        // (p.ej. "Mapa" vuelve a mostrar #map)
+        //--------------------------------------------------
+
+        if(tabs[tabId].onShow){
+
+            tabs[tabId].onShow();
+
+        }
 
     }
 
@@ -173,7 +186,13 @@ SIG.Ribbon = (()=>{
                     `<i class="${item.icon}"></i>
                      <div>${item.text}</div>`;
 
-                btn.onclick=item.click;
+                btn.onclick=()=>{
+
+                    console.log("[SIG.Ribbon] click botón:", item.text);
+
+                    item.click();
+
+                };
 
                 buttons.appendChild(btn);
 
