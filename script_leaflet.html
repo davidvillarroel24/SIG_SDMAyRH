@@ -1,0 +1,42 @@
+<script>
+
+SIG.Map=(()=>{
+
+    let map;
+
+    function create(){
+
+        map=L.map("map");
+
+        map.setView([-17.3935,-66.1570],8);
+
+        L.tileLayer(
+            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                maxZoom:19
+            }
+        ).addTo(map);
+
+    }
+
+    return{
+
+        init(){
+
+            create();
+
+            console.log("Mapa creado");
+
+        },
+
+        get(){
+
+            return map;
+
+        }
+
+    };
+
+})();
+
+</script>

@@ -1,0 +1,92 @@
+<script>
+
+SIG.Config = (()=>{
+
+    //--------------------------------------------------
+    // Cache de configuraciones
+    //--------------------------------------------------
+
+    const cache = {};
+
+    //--------------------------------------------------
+    // Guardar
+    //--------------------------------------------------
+
+    function set(sheet,data){
+
+        cache[sheet]=data;
+
+    }
+
+    //--------------------------------------------------
+    // Obtener
+    //--------------------------------------------------
+
+    function get(sheet){
+
+        return cache[sheet] || [];
+
+    }
+
+    //--------------------------------------------------
+
+    function exists(sheet){
+
+        return sheet in cache;
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        set,
+        get,
+        exists
+
+    };
+
+})();
+
+</script>
+
+
+<script>
+function loadConfig(sheet){
+
+    google.script.run
+
+        .withSuccessHandler(data=>{
+
+            SIG.Config.set(
+
+                sheet,
+
+                data
+
+            );
+
+            console.log(
+
+                sheet,
+
+                data.length
+
+            );
+
+            //--------------------------------------------------
+            // Mostrar Municipios al iniciar
+            //--------------------------------------------------
+
+            if(sheet==="MUNICIPIOS"){
+
+                SIG.LayerPanel.render(data);
+
+            }
+
+        })
+
+        .SIG_Config_getLayerConfig(sheet);
+
+}
+</script>

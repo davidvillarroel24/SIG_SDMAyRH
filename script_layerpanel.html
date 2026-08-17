@@ -1,0 +1,408 @@
+<script>
+
+SIG.LayerPanel = (()=>{
+
+    //--------------------------------------------------
+    // Controles
+    //--------------------------------------------------
+
+    let body;
+
+    let count;
+
+    //--------------------------------------------------
+    // Inicializar
+    //--------------------------------------------------
+
+    function init(){
+
+        body=document.getElementById(
+
+            "sig-layers-body"
+
+        );
+
+        count=document.getElementById(
+
+            "sig-layers-count"
+
+        );
+
+        document
+
+        .getElementById("btn-zoom-all")
+
+        .onclick = ()=>{
+
+            SIG.Layers.zoomAll();
+
+        };
+
+      //--------------------------------------------------
+      // Mostrar/Ocultar lista
+      //--------------------------------------------------
+
+      let collapsed=false;
+
+      document
+
+      .getElementById(
+
+          "btn-toggle-list"
+
+      )
+
+      .onclick=()=>{
+
+          collapsed=!collapsed;
+
+          body.style.display=
+
+              collapsed
+
+              ?"none"
+
+              :"block";
+
+          count.parentElement.style.display=
+
+              collapsed
+
+              ?"none"
+
+              :"block";
+
+          document
+
+          .querySelector(
+
+              "#btn-toggle-list i"
+
+          )
+
+          .className=
+
+              collapsed
+
+              ?"bi bi-chevron-down"
+
+              :"bi bi-chevron-up";
+
+      };
+
+      document
+
+      .getElementById(
+
+          "btn-municipios"
+
+      )
+
+      .onclick=()=>{
+
+          SIG.LayerPanel.render(
+
+              SIG.Config.get(
+
+                  "MUNICIPIOS"
+
+              )
+
+          );
+
+      };
+
+      document
+
+      .getElementById(
+
+          "btn-provincias"
+
+      )
+
+      .onclick=()=>{
+
+          SIG.LayerPanel.render(
+
+              SIG.Config.get(
+
+                  "PROVINCIAS"
+
+              )
+
+          );
+
+      };
+
+      document
+
+      .getElementById(
+
+          "btn-regiones"
+
+      )
+
+      .onclick=()=>{
+
+          SIG.LayerPanel.render(
+
+              SIG.Config.get(
+
+                  "REGIONES"
+
+              )
+
+          );
+
+      };
+        
+
+    }
+
+    //--------------------------------------------------
+    // Crear una fila
+    //--------------------------------------------------
+
+    function createRow(item){
+
+
+        const state = SIG.Layers.getState(
+
+            item.file_id
+
+        );
+        //--------------------------------------------------
+        // Estado
+        //--------------------------------------------------
+
+        const status = document.createElement("span");
+
+        status.className = "mx-2";
+
+        const row=document.createElement("div");
+
+
+        row.className=
+
+            "list-group-item d-flex align-items-center";
+
+        //--------------------------------------------------
+        // Check
+        //--------------------------------------------------
+
+        const check=document.createElement("input");
+
+        check.type="checkbox";
+
+        check.className="form-check-input me-2";
+
+        check.checked=state.visible;
+
+
+        check.onchange = async ()=>{
+
+          //--------------------------------------------------
+          // Mostrar
+          //--------------------------------------------------
+
+          if(check.checked){
+
+              const state = SIG.Layers.getState(
+
+                  item.file_id
+
+              );
+
+              if(!state.loaded){
+
+                  status.innerHTML =
+
+                      '<span class="spinner-border spinner-border-sm"></span>';
+
+                  try{
+
+                      await SIG.Layers.load(item);
+
+                  }
+                  catch(error){
+
+                      console.error(error);
+
+                      check.checked = false;
+
+                      status.innerHTML =
+
+                          '<i class="bi bi-exclamation-circle-fill text-danger"></i>';
+
+                      return;
+
+                  }
+
+              }
+              else{
+
+                  SIG.Layers.show(
+
+                      item.file_id
+
+                  );
+
+              }
+
+              status.innerHTML =
+
+                  '<i class="bi bi-check-circle-fill text-success"></i>';
+
+          }
+
+          //--------------------------------------------------
+          // Ocultar
+          //--------------------------------------------------
+
+          else{
+
+              SIG.Layers.hide(
+
+                  item.file_id
+
+              );
+
+          }
+
+        };
+
+        //--------------------------------------------------
+        // Nombre
+        //--------------------------------------------------
+
+        const name=document.createElement("span");
+
+        name.className="flex-grow-1";
+
+        name.textContent=item.nombre;
+
+        //--------------------------------------------------
+        // Zoom
+        //--------------------------------------------------
+
+        const zoom=document.createElement("button");
+
+        zoom.className=
+
+            "btn btn-sm btn-outline-secondary";
+
+        zoom.innerHTML=
+
+            '<i class="bi bi-zoom-in"></i>';
+
+        zoom.onclick = async ()=>{
+
+          if(!SIG.Layers.exists(item.file_id)){
+
+              status.innerHTML =
+
+                  '<span class="spinner-border spinner-border-sm"></span>';
+
+              try{
+
+                  await SIG.Layers.load(
+
+                      item
+
+                  );
+
+                  status.innerHTML =
+
+                      '<i class="bi bi-check-circle-fill text-success"></i>';
+
+                  check.checked = true;
+
+              }
+              catch(error){
+
+                  console.error(error);
+
+                  status.innerHTML =
+
+                      '<i class="bi bi-exclamation-circle-fill text-danger"></i>';
+
+                  return;
+
+              }
+
+          }
+
+          SIG.Layers.zoomTo(
+
+              item.file_id
+
+          );
+
+        };
+
+        //--------------------------------------------------
+
+        row.appendChild(check);
+
+        row.appendChild(name);
+
+        row.appendChild(status);
+
+        row.appendChild(zoom);
+
+        return row;
+
+    }
+
+    //--------------------------------------------------
+    // Dibujar panel
+    //--------------------------------------------------
+
+    function render(items){
+
+      console.log("BODY:", body);
+      console.log("COUNT:", count); 
+
+      body.innerHTML="";
+
+      items.forEach(item=>{
+
+          body.appendChild(
+
+              createRow(item)
+
+          );
+
+      });
+
+      count.textContent=
+
+          items.length+" capas";
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        init,
+
+        render
+
+    };
+
+})();
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    ()=>{
+
+        SIG.LayerPanel.init();
+
+    }
+
+);
+
+</script>

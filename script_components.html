@@ -1,0 +1,104 @@
+<script>
+
+SIG.Components  = (() => {
+
+    //--------------------------------------------------
+    // Registro de vistas
+    //--------------------------------------------------
+
+    const components = {};
+
+    //--------------------------------------------------
+    // Clonar componente
+    //--------------------------------------------------
+    function clone(id){
+
+        const component = get(id);
+
+        if(!component) return null;
+
+        const copy = component.cloneNode(true);
+
+        copy.style.display = "block";
+
+        return copy;
+
+    }
+
+    //--------------------------------------------------
+    // Registrar
+    //--------------------------------------------------
+
+    function register(element){
+
+        if(!element.id){
+
+            console.warn("El componente no tiene id.");
+
+            return;
+
+        }
+
+        components[element.id] = element;
+
+    }
+
+    //--------------------------------------------------
+    // Obtener
+    //--------------------------------------------------
+
+    function get(id){
+
+        return components[id] || null;
+
+    }
+
+    //--------------------------------------------------
+    // Existe
+    //--------------------------------------------------
+
+    function exists(id){
+
+        return id in components;
+
+    }
+
+    //--------------------------------------------------
+    // Registrar todas automáticamente
+    //--------------------------------------------------
+
+    function init(){
+
+        document
+            .querySelectorAll("[data-sig-component]")
+            .forEach(component => {
+
+                register(component);
+
+            });
+
+        console.log("Components:", components);
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        init,
+        get,
+        exists,
+        register,
+        clone
+
+    };
+
+})();
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    SIG.Components .init();
+
+});
+
+</script>

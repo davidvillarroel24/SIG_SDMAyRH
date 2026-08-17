@@ -1,0 +1,136 @@
+<script>
+
+SIG.Loader = (()=>{
+
+    const cache = new Map();
+
+    //--------------------------------------------------
+
+    async function load(fileId){
+
+      //--------------------------------------------------
+      // Ya está en memoria
+      //--------------------------------------------------
+
+      if(cache.has(fileId)){
+
+          console.log(
+
+              "GeoJSON desde cache:",
+
+              fileId
+
+          );
+
+          return cache.get(fileId);
+
+      }
+
+      //--------------------------------------------------
+      // Descargar
+      //--------------------------------------------------
+
+      return new Promise((resolve,reject)=>{
+
+          google.script.run
+
+          .withSuccessHandler(geojson=>{
+
+              cache.set(
+
+                  fileId,
+
+                  geojson
+
+              );
+
+              resolve(geojson);              
+
+          })
+
+          .withFailureHandler(reject)
+
+          .SIG_Drive_getGeoJson(fileId);
+
+      });
+      
+
+    }
+
+    //--------------------------------------------------
+
+    function has(fileId){
+
+        return cache.has(fileId);
+
+    }
+    //--------------------------------------------------
+
+    function get(fileId){
+
+        return cache.get(fileId);
+
+    }
+
+    //--------------------------------------------------
+
+    function clear(){
+
+        cache.clear();
+
+    }
+
+    //--------------------------------------------------
+
+    function size(){
+
+        return cache.size;
+
+    }
+
+    //--------------------------------------------------
+    // Estadísticas
+    //--------------------------------------------------
+
+    function stats(){
+
+      return{
+
+          hits,
+
+          misses,
+
+          size : cache.size,
+
+          files: Array.from(
+
+              cache.keys()
+
+          )
+
+        };
+
+    }
+    //--------------------------------------------------
+
+    
+
+
+  return{
+
+    load,
+
+    has,
+
+    get,
+
+    clear,
+
+    size,
+
+    stats
+
+  };
+
+})();
+</script>

@@ -1,0 +1,117 @@
+<style>
+  #sig-layers-panel{
+
+        position:absolute;
+
+        top:70px;
+
+        right:15px;
+
+        width:300px;
+
+        z-index:900;
+
+    }
+
+    #sig-layers-body{
+
+        max-height:350px;
+
+        overflow-y:auto;
+
+    }
+
+    #sig-layers-body::-webkit-scrollbar{
+
+        width:8px;
+
+    }
+
+    #sig-layers-body::-webkit-scrollbar-thumb{
+
+        background:#c0c0c0;
+
+        border-radius:10px;
+
+    }
+</style>
+<div id="sig-layers-panel" class="card shadow">
+
+    <div class="card-header d-flex align-items-center">
+
+        <span class="me-auto">
+
+            <i class="bi bi-layers"></i>
+
+            Capas
+
+        </span>
+
+        <div class="btn-group btn-group-sm me-2">
+
+            <button
+                id="btn-regiones"
+                class="btn btn-outline-secondary"
+                title="Regiones">
+
+                R
+
+            </button>
+
+            <button
+                id="btn-provincias"
+                class="btn btn-outline-secondary"
+                title="Provincias">
+
+                P
+
+            </button>
+
+            <button
+                id="btn-municipios"
+                class="btn btn-outline-secondary"
+                title="Municipios">
+
+                M
+
+            </button>
+
+        </div>
+
+        <button
+            id="btn-zoom-all"
+            class="btn btn-sm btn-outline-secondary me-1"
+            title="Zoom a todas">
+
+            <i class="bi bi-arrows-fullscreen"></i>
+
+        </button>
+
+        <button
+            id="btn-toggle-list"
+            class="btn btn-sm btn-outline-secondary"
+            title="Mostrar/Ocultar">
+
+            <i class="bi bi-chevron-up"></i>
+
+        </button>
+
+    </div>
+
+    <div
+        id="sig-layers-body"
+        class="list-group list-group-flush">
+
+    </div>
+
+    <div class="card-footer text-muted small">
+
+        <span id="sig-layers-count">
+
+            0 capas
+
+        </span>
+
+    </div>
+
+</div>

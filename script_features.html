@@ -1,0 +1,179 @@
+<script>
+
+SIG.Features = (()=>{
+
+    //--------------------------------------------------
+    // Geometrías cargadas
+    //--------------------------------------------------
+
+    const features = {};
+
+    //--------------------------------------------------
+    // Cargar una geometría
+    //--------------------------------------------------
+
+    function load(item){
+
+        const feature = item.feature;
+
+        const layer = L.geoJSON(
+
+            feature,
+
+            {
+
+                style:()=>SIG.Styles.get(
+
+                    item.estilo_id
+
+                ),
+
+                pointToLayer:(feature,latlng)=>{
+
+                    return L.circleMarker(
+
+                        latlng,
+
+                        SIG.Styles.get(
+
+                            item.estilo_id
+
+                        )
+
+                    );
+
+                }
+
+            }
+
+        );
+
+        layer.addTo(
+
+            SIG.Map.get()
+
+        );
+
+        features[item.id]={
+
+            data:item,
+
+            leaflet:layer
+
+        };
+
+        return features[item.id];
+
+    }
+
+    //--------------------------------------------------
+    // Cargar varias
+    //--------------------------------------------------
+
+    function loadMany(items){
+
+        items.forEach(item=>{
+
+            load(item);
+
+        });
+
+        console.log(
+
+            "Geometrías:",
+
+            Object.keys(features).length
+
+        );
+
+    }
+
+    //--------------------------------------------------
+    // Obtener
+    //--------------------------------------------------
+
+    function get(id){
+
+        return features[id] || null;
+
+    }
+
+    //--------------------------------------------------
+    // Existe
+    //--------------------------------------------------
+
+    function exists(id){
+
+        return id in features;
+
+    }
+
+    //--------------------------------------------------
+    // Eliminar
+    //--------------------------------------------------
+
+    function remove(id){
+
+        const item = features[id];
+
+        if(!item){
+
+            return;
+
+        }
+
+        SIG.Map.get().removeLayer(
+
+            item.leaflet
+
+        );
+
+        delete features[id];
+
+    }
+
+    //--------------------------------------------------
+    // Limpiar
+    //--------------------------------------------------
+
+    function clear(){
+
+        Object.keys(features).forEach(id=>{
+
+            remove(id);
+
+        });
+
+    }
+
+    //--------------------------------------------------
+    // Estadísticas
+    //--------------------------------------------------
+
+    function stats(){
+
+        return{
+
+            total:Object.keys(features).length
+
+        };
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        load,
+        loadMany,
+        get,
+        exists,
+        remove,
+        clear,
+        stats
+
+    };
+
+})();
+
+</script>

@@ -1,0 +1,70 @@
+<script>
+
+window.SIG = {
+
+    version:"0.1",
+
+    modules:{}
+
+};
+
+console.log("MAIN");
+
+console.log(window.SIG);
+
+function initApp(){
+
+    console.log("Motor SIG iniciado");
+
+    google.script.run
+
+    .withSuccessHandler(
+
+        SIG.LayerPanel.render
+
+    )
+
+    .SIG_Config_getLayerConfig(
+
+        "MUNICIPIOS"
+
+    );
+
+    google.script.run
+
+    .withSuccessHandler(
+
+        SIG.Features.loadMany
+
+    )
+
+    .SIG_Geometrias_list();
+
+
+    loadConfig("MUNICIPIOS");
+
+    loadConfig("PROVINCIAS");
+
+    loadConfig("REGIONES");
+
+    //--------------------------------------------------
+    // Estilos
+    //--------------------------------------------------
+
+    google.script.run
+
+        .withSuccessHandler(
+
+            SIG.Styles.load
+
+        )
+
+        .SIG_Config_getStyles();
+
+  
+
+}
+
+document.addEventListener("DOMContentLoaded",initApp);
+
+</script>

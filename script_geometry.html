@@ -1,0 +1,66 @@
+<script>
+
+SIG.Geometry = (()=>{
+
+    //--------------------------------------------------
+
+    function getType(layer){
+
+        return layer
+                .toGeoJSON()
+                .geometry
+                .type;
+
+    }
+
+    //--------------------------------------------------
+
+    function build(layer,form){
+
+      const geoFeature = layer.toGeoJSON();
+
+      return{
+
+          id:null,
+
+          capa_id:Number(
+              SIG.Form.get(form,"geo_capa")
+          ),
+
+          estilo_id:Number(
+              SIG.Form.get(form,"geo_estilo")
+          ),
+
+          tipo:getType(layer),
+
+          feature:geoFeature,
+
+          nombre:
+              SIG.Form.get(form,"geo_nombre"),
+
+          descripcion:
+              SIG.Form.get(form,"geo_descripcion"),
+
+          estado:
+              SIG.Form.get(form,"geo_estado"),
+
+          eliminado:false
+
+      };
+
+  }
+
+    
+    //--------------------------------------------------
+    
+
+    return{
+
+        build,
+        getType
+
+    };
+
+})();
+
+</script>

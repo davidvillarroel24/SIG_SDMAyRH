@@ -1,0 +1,93 @@
+<script>
+
+SIG.Modal = (()=>{
+
+    let modal;
+    let title;
+    let body;
+    let close;
+    let currentLayer = null;
+    let onSave = null;
+    let context = {};
+
+    //------------------------------------------------
+
+    function init(){
+
+        modal=document.getElementById("sig-modal");
+
+        title=document.getElementById("sig-modal-title");
+
+        body=document.getElementById("sig-modal-body");
+
+        close=document.getElementById("sig-modal-close");
+
+        close.onclick=hide;
+
+    }
+
+    //------------------------------------------------
+
+    function open(options){
+
+        context = options;
+
+        title.textContent = options.title;
+
+        body.innerHTML = "";
+
+        body.appendChild(
+
+            SIG.Components.clone(options.component)
+
+        );
+
+        modal.style.display = "flex";
+
+        const btn = body.querySelector("#btn-save-geometry");
+
+        if(btn){
+
+            btn.onclick = ()=>{
+
+                if(context.onSave){
+
+                    context.onSave(context);
+
+                }
+
+                hide();
+
+            };
+
+        }
+
+    }
+
+    //------------------------------------------------
+
+    function hide(){
+
+        modal.style.display="none";
+
+    }
+
+    //------------------------------------------------
+
+    return{
+
+        init,
+        open,
+        hide
+
+    };
+
+})();
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    SIG.Modal.init();
+
+});
+
+</script>

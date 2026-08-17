@@ -1,0 +1,99 @@
+<script>
+
+SIG.Styles = (() => {
+
+    //==================================================
+    // Estilos temporales
+    // Luego vendrán desde Google Sheets
+    //==================================================
+    const styles = {};
+    
+    function load(items){
+
+        items.forEach(item=>{
+
+            styles[item.id]=item;
+
+        });
+
+        console.log(
+
+            "Estilos:",
+
+            Object.keys(styles).length
+
+        );
+
+      console.log("Estilos cargados");
+
+      console.log(styles);
+
+    }
+
+    //==================================================
+    // Devuelve un estilo
+    //==================================================
+
+    function get(estiloId){
+
+        return styles[estiloId];
+
+    }
+
+    //==================================================
+    // Aplica un estilo a cualquier geometría
+    //==================================================
+
+    function apply(layer, estiloId){
+
+        const estilo = get(estiloId);
+
+        if(!estilo){
+            console.warn("Estilo no encontrado:", estiloId);
+            return;
+        }
+
+        // Marker
+        if(layer instanceof L.Marker){
+
+            layer.setIcon(
+                SIG.Symbols.create(estilo.simbolo_id)
+            );
+
+            return;
+
+        }
+
+        // Polyline, Polygon, Circle, Rectangle...
+
+        if(layer.setStyle){
+
+            layer.setStyle({
+
+                color: estilo.color,
+                fillColor: estilo.fillColor,
+                weight: estilo.weight,
+                opacity: estilo.opacity,
+                fillOpacity: estilo.fillOpacity
+
+            });
+
+        }
+
+    }
+
+    //==================================================
+    // API pública
+    //==================================================
+
+    return{
+
+        load,
+        get,
+        apply
+
+    };
+
+})();
+
+</script>

@@ -1,0 +1,213 @@
+<div id="view-geometry"
+     data-sig-component
+     style="display:none;">
+
+    <div class="container-fluid">
+
+        <!-- ===================================== -->
+        <!-- RESUMEN -->
+        <!-- ===================================== -->
+
+        <div class="alert alert-primary mb-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h6 class="mb-1">
+                        Nueva Geometría
+                    </h6>
+
+                    <small class="text-muted">
+
+                        Tipo:
+                        <span id="geo_tipo">
+                            Point
+                        </span>
+
+                    </small>
+
+                </div>
+
+                <div>
+
+                    <span
+                        id="geo_badge"
+                        class="badge bg-success">
+
+                        ACTIVO
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================== -->
+        <!-- INFORMACIÓN GENERAL -->
+        <!-- ===================================== -->
+
+        <h6 class="border-bottom pb-2 mb-3">
+
+            Información General
+
+        </h6>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+
+                Nombre
+
+            </label>
+
+            <input
+                id="geo_nombre"
+                class="form-control">
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+
+                Descripción
+
+            </label>
+
+            <textarea
+                id="geo_descripcion"
+                rows="3"
+                class="form-control"></textarea>
+
+        </div>
+
+        <!-- ===================================== -->
+        <!-- CONFIGURACIÓN -->
+        <!-- ===================================== -->
+
+        <h6 class="border-bottom pb-2 mb-3">
+
+            Configuración
+
+        </h6>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+
+                    Capa
+
+                </label>
+
+                <select
+                    id="geo_capa"
+                    class="form-select">
+
+                    <option value="1">
+
+                        Proyectos
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+
+                    Estilo
+
+                </label>
+
+                <select
+                    id="geo_estilo"
+                    class="form-select">
+
+                    <option value="1">
+
+                        Proyecto
+
+                    </option>
+
+                    <option value="2">
+
+                        Municipio
+
+                    </option>
+
+                    <option value="3">
+
+                        Riesgo
+
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+
+                Estado
+
+            </label>
+
+            <select
+                id="geo_estado"
+                class="form-select">
+
+                <option>
+
+                    ACTIVO
+
+                </option>
+
+                <option>
+
+                    INACTIVO
+
+                </option>
+
+            </select>
+
+        </div>
+
+        <!-- ===================================== -->
+        <!-- ACCIONES -->
+        <!-- ===================================== -->
+
+        <div class="d-flex justify-content-end gap-2">
+
+          <button
+              class="btn btn-outline-secondary"
+              onclick="SIG.Modal.hide();">
+
+              <i class="bi bi-x-circle"></i>
+              Cancelar
+
+          </button>
+
+          <button
+              id="btn-save-geometry"
+              class="btn btn-primary">
+
+              <i class="bi bi-floppy"></i>
+              Guardar
+
+          </button>
+
+      </div>
+
+    </div>
+
+</div>

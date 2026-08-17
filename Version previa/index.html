@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resumen Interactivo Proyectos de Riego</title>
+  <!-- Bootstrap -->
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+    <!-- SweetAlert -->
+    <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- Leaflet -->
+    <link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-primary mb-4">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">Resumen Interactivo</span>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-light btn-sm d-none" id="btnGoHome">Inicio</button>
+        <div class="unit-shortcuts d-none" id="unitShortcutsNavbar"></div>
+        <button class="btn btn-warning btn-sm d-none" id="btnOpenPdfDesigner">Diseñador PDF</button>
+        <button class="btn btn-outline-light btn-sm d-none" id="btnResetFilters">Restablecer filtros</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mb-3 text-center d-none" id="activeUnitBanner">
+    <span class="active-unit-label" id="activeUnitLabel"></span>
+  </div>
+
+  <section class="container home-section" id="homeSection">
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="alert alert-primary mb-0">
+          Selecciona una unidad para iniciar. Los JSON cargados se mantienen aislados por unidad.
+        </div>
+      </div>
+    </div>
+    <div class="row g-3" id="homeUnitsGrid"><div class="col-12 text-muted small">Cargando unidades...</div></div>
+  </section>
+
+  <div class="container d-none" id="appSection">
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-lg-3">
+        <label class="form-label">Hoja</label>
+        <select id="filterHoja" class="form-select"><option value="">Todas</option></select>
+      </div>
+      <div class="col-12 col-lg-3">
+        <label class="form-label">Categoría</label>
+        <select id="filterCategoria" class="form-select"><option value="">Todas</option></select>
+      </div>
+      <div class="col-12 col-lg-3 align-self-end">
+        <button class="btn btn-success w-100" id="btnShowAll">Mostrar todo</button>
+      </div>
+      <div class="col-12 col-lg-3 align-self-end text-lg-end">
+        <div class="dropdown d-inline-block">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="btnProyectosLibrary" data-bs-toggle="dropdown" aria-expanded="false">
+            Biblioteca
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-2" id="proyectosLibraryMenu" style="min-width: 260px; max-height: 300px; overflow-y: auto;">
+            <div class="text-muted small px-2">Cargando...</div>
+          </div>
+        </div>
+        <button class="btn btn-outline-primary" id="btnReloadData">Cargar JSON</button>
+        <input type="file" id="fileInputJson" accept="application/json,.json" class="d-none" multiple />
+      </div>
+    </div>
+    <div class="row g-3 mb-3">
+      <div class="col-12 col-md-4 col-xl-3">
+        <label class="form-label">Suma de familias por</label>
+        <select id="groupByFieldSelect" class="form-select">
+          <option value="REGIONES">Región</option>
+          <option value="PROVINCIA">Provincia</option>
+          <option value="MUNICIPIO">Municipio</option>
+        </select>
+      </div>
+    </div>
+    <div class="row g-3 mb-3" id="dynamicFiltersRow"></div>
+    <div class="row g-3 mb-3">
+      <div class="col-12 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <small class="text-muted">No se cargan datos al inicio. Pulsa Cargar JSON y selecciona tu archivo <code>proyectos.json</code> para cargarlo en memoria.</small>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4" id="summariesRow"></div>
+
+    <div class="row g-3 mb-4" id="chartsRow"></div>
+
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+              <div class="d-flex flex-column flex-md-row align-items-md-center gap-2">
+                <h5 class="card-title mb-0">Tabla de proyectos</h5>
+                <span class="badge bg-light text-dark" id="tableModeLabel"></span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <div class="dropdown">
+                  <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="columnVisibilityDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Columnas
+                  </button>
+                  <div class="dropdown-menu p-2" aria-labelledby="columnVisibilityDropdown" id="columnVisibilityDropdownMenu"></div>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table id="proyectosTable" class="table table-striped table-bordered table-hover" style="width:100%"></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">Mapa de proyectos con coordenadas válidas</h5>
+            <div class="mb-2">
+              <label class="form-label mb-1 small text-muted">Resaltar entidades específicas en el mapa</label>
+              <div class="row g-2" id="mapHighlightPickers"></div>
+            </div>
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="documentsModal" tabindex="-1" aria-labelledby="documentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="documentsModalLabel">Documentos del proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="documentsModalBody">
+          <div class="alert alert-secondary">Seleccione un documento para verlo.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="pdfDesignerModal" tabindex="-1" aria-labelledby="pdfDesignerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header bg-light">
+          <div>
+            <h5 class="modal-title mb-1" id="pdfDesignerModalLabel">Diseñador de PDF</h5>
+            <small class="text-muted" id="pdfDesignerModalSubtitle">Cargado con el contexto de la unidad actual.</small>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3 mb-3">
+            <div class="col-12 col-lg-4">
+              <div class="card shadow-sm h-100">
+                <div class="card-body">
+                  <h6 class="card-title text-secondary">Contexto actual</h6>
+                  <div class="d-flex flex-column gap-2 mt-3">
+                    <div><strong>Unidad:</strong> <span id="pdfDesignerUnitLabel">-</span></div>
+                    <div><strong>Registros filtrados:</strong> <span id="pdfDesignerRowsCount">0</span></div>
+                    <div><strong>Filtros activos:</strong> <span id="pdfDesignerFiltersCount">0</span></div>
+                    <div><strong>Vista de tabla:</strong> <span id="pdfDesignerTableMode">-</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-8">
+              <div class="card shadow-sm h-100">
+                <div class="card-body">
+                  <h6 class="card-title text-secondary">Qué tomará el PDF</h6>
+                  <div class="list-group list-group-flush pdf-designer-summary mt-3" id="pdfDesignerContextList">
+                    <div class="list-group-item"><span>Indicadores disponibles</span><strong id="pdfDesignerIndicatorsCount">0</strong></div>
+                    <div class="list-group-item"><span>Charts disponibles</span><strong id="pdfDesignerChartsCount">0</strong></div>
+                    <div class="list-group-item"><span>Columnas visibles</span><strong id="pdfDesignerColumnsCount">0</strong></div>
+                    <div class="list-group-item"><span>Puntos en mapa</span><strong id="pdfDesignerMapPointsCount">0</strong></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-info mb-0">
+            Este es el primer paso del diseñador: validar que el modal abre con el contexto real de la unidad activa antes de construir filas, columnas y widgets.
+          </div>
+          <div class="card shadow-sm mt-3">
+            <div class="card-body">
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+                <div>
+                  <h6 class="card-title text-secondary mb-1">Estructura del layout</h6>
+                  <small class="text-muted">Define filas, columnas y el widget que vivirá en cada columna.</small>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="button" class="btn btn-primary btn-sm" id="btnPdfAddRow">Agregar fila</button>
+                  <button type="button" class="btn btn-outline-primary btn-sm" id="btnPdfSaveTemplate">Guardar plantilla</button>
+                  <button type="button" class="btn btn-outline-primary btn-sm" id="btnPdfLoadTemplate">Subir plantilla</button>
+                  <div class="dropdown d-inline-block">
+                    <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="btnPlantillasLibrary" data-bs-toggle="dropdown" aria-expanded="false">
+                      Cargar desde biblioteca
+                    </button>
+                    <div class="dropdown-menu p-2" id="plantillasLibraryMenu" style="min-width: 240px; max-height: 260px; overflow-y: auto;">
+                      <div class="text-muted small px-2">Cargando...</div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-outline-secondary btn-sm" id="btnPdfResetLayout">Restablecer layout</button>
+                </div>
+              </div>
+              <div id="pdfDesignerLayoutRows" class="d-flex flex-column gap-3"></div>
+            </div>
+          </div>
+          <div class="card shadow-sm mt-3">
+            <div class="card-body">
+              <h6 class="card-title text-secondary mb-1">Encabezado, pie y tamaño carta</h6>
+              <small class="text-muted">Define emblemas y controla si el contenido excede una hoja carta.</small>
+              <div class="row g-3 mt-1">
+                <div class="col-12 col-lg-4">
+                  <label class="form-label">Orientación de hoja</label>
+                  <select class="form-select" id="pdfPageOrientation">
+                    <option value="portrait">Carta vertical</option>
+                    <option value="landscape">Carta horizontal</option>
+                  </select>
+                </div>
+                <div class="col-12 col-lg-4">
+                  <label class="form-label">Altura encabezado (mm)</label>
+                  <input type="number" min="8" max="70" step="1" class="form-control" id="pdfHeaderHeightMm" value="24">
+                </div>
+                <div class="col-12 col-lg-4">
+                  <label class="form-label">Altura pie de página (mm)</label>
+                  <input type="number" min="8" max="70" step="1" class="form-control" id="pdfFooterHeightMm" value="18">
+                </div>
+              </div>
+
+              <div class="row g-3 mt-1">
+                <div class="col-12 col-lg-6">
+                  <div class="border rounded p-3 h-100">
+                    <h6 class="mb-2">Encabezado</h6>
+                    <div class="mb-2">
+                      <label class="form-label">Título</label>
+                      <input type="text" class="form-control" id="pdfHeaderTitle" placeholder="Ej. Resumen Ejecutivo">
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Subtítulo</label>
+                      <input type="text" class="form-control" id="pdfHeaderSubtitle" placeholder="Ej. Unidad / periodo">
+                    </div>
+                    <div class="row g-2">
+                      <div class="col-12 col-md-6">
+                        <label class="form-label">Logo izquierdo</label>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="pdf-logo-preview" id="pdfHeaderLeftLogoPreview">-</div>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="btnPdfHeaderLeftLogo">Cargar</button>
+                          <input type="file" accept="image/*" class="d-none" id="pdfHeaderLeftLogoInput">
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label class="form-label">Logo derecho</label>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="pdf-logo-preview" id="pdfHeaderRightLogoPreview">-</div>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="btnPdfHeaderRightLogo">Cargar</button>
+                          <input type="file" accept="image/*" class="d-none" id="pdfHeaderRightLogoInput">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                  <div class="border rounded p-3 h-100">
+                    <h6 class="mb-2">Pie de página</h6>
+                    <div class="mb-3">
+                      <label class="form-label">Texto de pie</label>
+                      <input type="text" class="form-control" id="pdfFooterText" placeholder="Ej. Ministerio ... | Página {n}">
+                    </div>
+                    <div class="row g-2">
+                      <div class="col-12 col-md-6">
+                        <label class="form-label">Logo izquierdo</label>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="pdf-logo-preview" id="pdfFooterLeftLogoPreview">-</div>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="btnPdfFooterLeftLogo">Cargar</button>
+                          <input type="file" accept="image/*" class="d-none" id="pdfFooterLeftLogoInput">
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label class="form-label">Logo derecho</label>
+                        <div class="d-flex align-items-center gap-2">
+                          <div class="pdf-logo-preview" id="pdfFooterRightLogoPreview">-</div>
+                          <button type="button" class="btn btn-outline-secondary btn-sm" id="btnPdfFooterRightLogo">Cargar</button>
+                          <input type="file" accept="image/*" class="d-none" id="pdfFooterRightLogoInput">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card mt-3 pdf-page-estimate-card">
+                <div class="card-body">
+                  <h6 class="card-title text-secondary">Control de altura por hoja carta</h6>
+                  <div class="text-muted small mb-2">Márgenes fijos: izquierda 1.5 cm, superior/derecha/inferior 1 cm.</div>
+                  <div class="list-group list-group-flush">
+                    <div class="list-group-item"><span>Alto útil por página</span><strong id="pdfLetterAvailableMm">0 mm</strong></div>
+                    <div class="list-group-item"><span>Alto estimado del contenido</span><strong id="pdfLayoutEstimatedMm">0 mm</strong></div>
+                    <div class="list-group-item"><span>Páginas estimadas</span><strong id="pdfEstimatedPages">1</strong></div>
+                  </div>
+                  <div class="alert alert-success mb-0 mt-3" id="pdfPageEstimateAlert">El layout estimado entra en una hoja carta.</div>
+                </div>
+              </div>
+
+              <div class="card mt-3">
+                <div class="card-body">
+                  <h6 class="card-title text-secondary mb-1">Exportación por lote</h6>
+                  <small class="text-muted">Genera un solo PDF o varios archivos separados por un campo territorial.</small>
+                  <div class="row g-2 mt-2">
+                    <div class="col-12 col-lg-5">
+                      <label class="form-label">Modo de lote</label>
+                      <select class="form-select" id="pdfBatchMode">
+                        <option value="single">Un solo PDF (todo unido)</option>
+                        <option value="grouped">Varios PDF separados</option>
+                      </select>
+                    </div>
+                    <div class="col-12 col-lg-7">
+                      <label class="form-label">Separar por</label>
+                      <select class="form-select" id="pdfBatchGroupField">
+                        <option value="REGIONES">Región</option>
+                        <option value="PROVINCIA">Provincia</option>
+                        <option value="MUNICIPIO">Municipio</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <div class="text-muted small" id="pdfDesignerModalFooter">Listo para ampliar con layout, widgets y exportación.</div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-primary" id="btnPdfPreview">Vista imprimible</button>
+            <button type="button" class="btn btn-primary" id="btnExportPdf">Exportar PDF</button>
+            <button type="button" class="btn btn-success" id="btnPdfBatchExport">Exportar lote</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="pdfTemplateFileInput" accept="application/json,.json" class="d-none">
+
+  <div id="pdfPrintRoot" aria-hidden="true"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" ></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" ></script>
+  <script src="https://unpkg.com/leaflet-image@0.4.0/leaflet-image.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/esquema.js"></script>
+  <script src="js/estado.js"></script>
+  <script src="js/filtros.js"></script>
+  <script src="js/tabla.js"></script>
+  <script src="js/graficos.js"></script>
+  <script src="js/geodata.js"></script>
+  <script src="js/mapa.js"></script>
+  <script src="js/pdf-designer.js"></script>
+  <script src="js/bootstrap.js"></script>
+</body>
+</html>

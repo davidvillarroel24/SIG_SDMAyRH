@@ -1,0 +1,139 @@
+<script>
+
+SIG.Draw = (() => {
+
+    let editableLayers;
+    let drawControl;
+
+    function createFeatureGroup() {
+
+        editableLayers = new L.FeatureGroup();
+
+        SIG.Map.get().addLayer(editableLayers);
+
+    }
+
+    function createToolbar() {
+
+        drawControl = new L.Control.Draw({
+
+            edit: {
+
+                featureGroup: editableLayers
+
+            },
+
+            draw: {
+
+                polygon: true,
+
+                polyline: true,
+
+                rectangle: true,
+
+                circle: true,
+
+                marker: true,
+
+                circlemarker: true
+
+            }
+
+        });
+
+        SIG.Map.get().addControl(drawControl);
+
+    }
+
+    function registerEvents() {
+
+        SIG.Map.get().on(L.Draw.Event.CREATED, function (e) {
+
+            e.layer.estilo_id = 1;
+
+            SIG.Styles.apply(
+                e.layer,
+                e.layer.estilo_id
+            );
+
+            editableLayers.addLayer(e.layer);
+
+            SIG.Selection.register(e.layer);
+
+            SIG.Selection.select(e.layer);
+
+            SIG.Modal.open({
+
+              title:"Nueva geometría",
+
+              component:"view-geometry",
+
+              data:{
+
+                  layer:e.layer,
+
+                  mode:"create"
+
+              },
+
+              onSave:(ctx)=>{
+
+                  const form = document.querySelector("#sig-modal-body");
+
+                  const geo = SIG.Geometry.build(
+
+                      ctx.data.layer,
+
+                      form
+
+                  );
+
+                  console.log(geo);
+
+              }
+
+          });
+
+            console.log("Nueva geometría", e.layerType);
+
+        });
+
+        SIG.Map.get().on(L.Draw.Event.EDITED, function () {
+
+            console.log("Geometría editada");
+
+        });
+
+        SIG.Map.get().on(L.Draw.Event.DELETED, function () {
+
+            console.log("Geometría eliminada");
+
+        });
+
+    }
+
+    return {
+
+        init() {
+
+            createFeatureGroup();
+
+            createToolbar();
+
+            registerEvents();
+
+            console.log("Leaflet.Draw iniciado");
+
+        },
+
+        getLayerGroup() {
+
+            return editableLayers;
+
+        }
+
+    };
+
+})();
+
+</script>

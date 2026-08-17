@@ -1,0 +1,155 @@
+<script>
+
+SIG.Selection = (() => {
+
+    let selectedLayer = null;
+
+    //--------------------------------------------------
+    // Seleccionar geometría
+    //--------------------------------------------------
+
+    function select(layer){
+
+        clear();
+
+        selectedLayer = layer;
+
+        highlight(layer);
+
+        console.log("Seleccionado:", layer);
+
+    }
+
+    //--------------------------------------------------
+    // Quitar selección
+    //--------------------------------------------------
+
+    function clear(){
+
+        if(!selectedLayer) return;
+
+        resetStyle(selectedLayer);
+
+        selectedLayer = null;
+
+    }
+
+    //--------------------------------------------------
+    // Obtener selección
+    //--------------------------------------------------
+
+    function get(){
+
+        return selectedLayer;
+
+    }
+
+    //--------------------------------------------------
+    // ¿Existe selección?
+    //--------------------------------------------------
+
+    function has(){
+
+        return selectedLayer !== null;
+
+    }
+
+    //--------------------------------------------------
+    // Resaltar
+    //--------------------------------------------------
+
+    function highlight(layer){
+
+        if(layer.setStyle){
+
+            layer.setStyle({
+
+                weight:6
+
+            });
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Restaurar estilo
+    //--------------------------------------------------
+
+    function resetStyle(layer){
+
+        if(layer.estilo_id){
+
+            SIG.Styles.apply(layer, layer.estilo_id);
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Registrar eventos de una geometría
+    //--------------------------------------------------
+
+    function register(layer){
+
+      layer.on("click", () => {
+
+          select(layer);
+
+      });
+
+      layer.on("dblclick",(e)=>{
+
+        L.DomEvent.stopPropagation(e);
+
+        SIG.Modal.open({
+
+          title:"Editar geometría",
+
+          component:"view-geometry",
+
+          data:{
+
+              layer:layer,
+
+              mode:"edit"
+
+          },
+
+          onSave:(ctx)=>{
+
+              const form=document.querySelector("#sig-modal-body");
+
+              const geo=SIG.Geometry.build(
+
+                  ctx.data.layer,
+
+                  form
+
+              );
+
+              console.log(geo);
+
+          }
+
+        });
+
+      });
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        register,
+        select,
+        clear,
+        get,
+        has
+
+    };
+
+})();
+
+</script>

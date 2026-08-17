@@ -1,0 +1,41 @@
+<script>
+
+SIG.Symbols = (() => {
+
+    //==================================================
+    // DEV: símbolo estático
+    //==================================================
+
+    function getUrl(simboloId){
+
+        return "https://lh3.googleusercontent.com/d/1mhrLimaAKtUb546U-NOBb2ZJJoip7YSO";
+
+    }
+
+    function create(simboloId){
+
+        return L.icon({
+
+            iconUrl : getUrl(simboloId),
+
+            iconSize : [36,36],
+
+            iconAnchor : [18,36],
+
+            popupAnchor : [0,-30]
+
+        });
+
+    }
+
+    return{
+
+        getUrl,
+
+        create
+
+    };
+
+})();
+
+</script>

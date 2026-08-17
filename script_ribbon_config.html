@@ -1,0 +1,59 @@
+<script>
+SIG.Ribbon.addTab({
+
+    id:"mapa",
+
+    text:"Mapa"
+
+});
+
+SIG.Ribbon.addGroup(
+
+    "mapa",
+
+    {
+
+        id:"nav",
+
+        text:"Navegación"
+
+    }
+
+);
+
+SIG.Ribbon.addButton(
+
+    "mapa",
+
+    "nav",
+
+    {
+
+        text:"Capas",
+
+        icon:"bi bi-layers",
+
+        click:()=>alert("Capas")
+
+    }
+
+);
+
+SIG.Ribbon.addButton(
+
+    "mapa",
+
+    "nav",
+
+    {
+
+        text:"Zoom",
+
+        icon:"bi bi-arrows-fullscreen",
+
+        click:()=>alert("Zoom")
+
+    }
+
+);
+</script>

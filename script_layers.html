@@ -1,0 +1,374 @@
+<script>
+
+SIG.Layers = (()=>{
+
+    //--------------------------------------------------
+    // Capas cargadas
+    //--------------------------------------------------
+
+    const layers = {};
+
+    //--------------------------------------------------
+    // Cargar una capa
+    //--------------------------------------------------
+
+    async function load(config){
+
+        const key = config.file_id;
+
+        //--------------------------------------------------
+        // Ya está cargada
+        //--------------------------------------------------
+
+        if(exists(key)){
+
+            show(key);
+
+            return get(key);
+
+        }
+
+        //--------------------------------------------------
+        // Obtener GeoJSON
+        //--------------------------------------------------
+
+        const geojson = await SIG.Loader.load(key);
+
+        //--------------------------------------------------
+        // Crear capa Leaflet
+        //--------------------------------------------------
+
+        const layer = L.geoJSON(
+
+            geojson,
+
+            {
+
+                style:()=>SIG.Styles.get(
+
+                    config.estilo
+
+                )
+
+            }
+
+        );
+
+        //--------------------------------------------------
+        // Mostrar
+        //--------------------------------------------------
+
+        layer.addTo(
+
+            SIG.Map.get()
+
+        );
+
+        //--------------------------------------------------
+        // Registrar
+        //--------------------------------------------------
+
+        layers[key]={
+
+            config,
+
+            geojson,
+
+            leaflet:layer,
+
+            state:{
+
+                loaded:true,
+
+                visible:true,
+
+                error:false
+
+            }
+
+        };
+
+        console.log(
+
+            "Capa:",
+
+            config.nombre
+
+        );
+
+        return layers[key];
+
+    }
+
+    //--------------------------------------------------
+    // Cargar varias
+    //--------------------------------------------------
+
+    async function loadMany(configs){
+
+        for(const config of configs){
+
+            await load(config);
+
+        }
+
+        SIG.LayerPanel.render(
+
+            all()
+
+        );
+
+    }
+
+
+    //--------------------------------------------------
+    // Zoom a todas las capas visibles
+    //--------------------------------------------------
+
+    function zoomAll(){
+
+        const bounds=L.latLngBounds();
+
+        Object.values(layers).forEach(item=>{
+
+            if(item.state.visible){
+
+                bounds.extend(
+
+                    item.leaflet.getBounds()
+
+                );
+
+            }
+
+        });
+
+        if(bounds.isValid()){
+
+            SIG.Map.get().fitBounds(
+
+                bounds
+
+            );
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Obtener
+    //--------------------------------------------------
+
+    function get(id){
+
+        return layers[id] || null;
+
+    }
+
+    //--------------------------------------------------
+    // Existe
+    //--------------------------------------------------
+
+    function exists(id){
+
+        return id in layers;
+
+    }
+
+    //--------------------------------------------------
+    // Mostrar
+    //--------------------------------------------------
+
+  function show(fileId){
+
+      const item = layers[fileId];
+
+      if(!item){
+
+          return;
+
+      }
+
+      item.leaflet.addTo(
+
+          SIG.Map.get()
+
+      );
+
+      item.state.visible = true;
+
+  }
+
+    //--------------------------------------------------
+    // Ocultar
+    //--------------------------------------------------
+
+    function hide(fileId){
+
+        const item = layers[fileId];
+
+        if(!item){
+
+            return;
+
+        }
+
+        SIG.Map.get().removeLayer(
+
+            item.leaflet
+
+        );
+
+        item.state.visible = false;
+
+    }
+
+    //--------------------------------------------------
+    // Alternar
+    //--------------------------------------------------
+
+    function toggle(id){
+
+        const item = get(id);
+
+        if(!item)return;
+
+        item.state.visible
+
+            ? hide(id)
+
+            : show(id);
+
+    }
+
+    //--------------------------------------------------
+    // Zoom
+    //--------------------------------------------------
+
+    function zoomTo(id){
+
+        const item = get(id);
+
+        if(!item)return;
+
+        SIG.Map.get().fitBounds(
+
+            item.leaflet.getBounds()
+
+        );
+
+    }
+
+    //--------------------------------------------------
+    // Eliminar
+    //--------------------------------------------------
+
+    function remove(id){
+
+        const item = get(id);
+
+        if(!item)return;
+
+        hide(id);
+
+        delete layers[id];
+
+    }
+
+    //--------------------------------------------------
+
+    function all(){
+
+        return Object.values(
+
+            layers
+
+        );
+
+    }
+
+    //--------------------------------------------------
+    // Estado de una capa
+    //--------------------------------------------------
+
+    function getState(fileId){
+
+        const item = layers[fileId];
+
+        if(!item){
+
+            return{
+
+                loaded:false,
+
+                visible:false,
+
+                error:false
+
+            };
+
+        }
+
+        return{
+
+            loaded:true,
+
+            visible:item.state.visible,
+
+            error:false
+
+        };
+
+    }
+
+
+    //--------------------------------------------------
+    // Estadísticas
+    //--------------------------------------------------
+
+    function stats(){
+
+        return{
+
+            total:Object.keys(layers).length,
+
+            ids:Object.keys(layers),
+
+            visible:Object.values(layers)
+
+                .filter(l=>l.state.visible)
+
+                .length
+
+        };
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        load,
+        loadMany,
+
+        get,
+        all,
+        getState,
+
+        exists,
+
+        show,
+        hide,
+        toggle,
+
+        zoomTo,
+        zoomAll,
+        remove,
+
+        stats
+
+    };
+
+})();
+
+</script>

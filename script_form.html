@@ -1,0 +1,72 @@
+<script>
+
+SIG.Form = (()=>{
+
+    //--------------------------------------------------
+    // Obtener un control
+    //--------------------------------------------------
+
+    function control(container,id){
+
+        return container.querySelector("#"+id);
+
+    }
+
+    //--------------------------------------------------
+    // Obtener valor
+    //--------------------------------------------------
+
+    function get(container,id){
+
+        const c = control(container,id);
+
+        return c ? c.value : null;
+
+    }
+
+    //--------------------------------------------------
+    // Asignar valor
+    //--------------------------------------------------
+
+    function set(container,id,value){
+
+        const c = control(container,id);
+
+        if(c){
+
+            c.value = value;
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Limpiar formulario
+    //--------------------------------------------------
+
+    function clear(container){
+
+        container
+            .querySelectorAll("input,textarea,select")
+            .forEach(c=>{
+
+                c.value="";
+
+            });
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        control,
+        get,
+        set,
+        clear
+
+    };
+
+})();
+
+</script>

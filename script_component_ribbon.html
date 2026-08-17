@@ -1,0 +1,240 @@
+<script>
+
+SIG.Ribbon = (()=>{
+
+    //--------------------------------------------------
+    // Datos
+    //--------------------------------------------------
+
+    const tabs = {};
+
+    let current = null;
+
+    //--------------------------------------------------
+    // Registrar pestaña
+    //--------------------------------------------------
+
+    function addTab(tab){
+
+        tabs[tab.id]={
+
+            ...tab,
+
+            groups:{}
+
+        };
+
+    }
+
+    //--------------------------------------------------
+    // Registrar grupo
+    //--------------------------------------------------
+
+    function addGroup(tabId,group){
+
+        tabs[tabId].groups[group.id]={
+
+            ...group,
+
+            buttons:[]
+
+        };
+
+    }
+
+    //--------------------------------------------------
+    // Registrar botón
+    //--------------------------------------------------
+
+    function addButton(tabId,groupId,button){
+
+        tabs[tabId]
+
+            .groups[groupId]
+
+            .buttons
+
+            .push(button);
+
+    }
+
+    //--------------------------------------------------
+    // Dibujar pestañas
+    //--------------------------------------------------
+
+    function renderTabs(){
+
+        const container = document.getElementById(
+
+            "sig-ribbon-tabs"
+
+        );
+
+        container.innerHTML="";
+
+        Object.values(tabs).forEach(tab=>{
+
+            const btn=document.createElement("button");
+
+            btn.className="ribbon-tab";
+
+            btn.textContent=tab.text;
+
+            btn.onclick=()=>show(tab.id);
+
+            container.appendChild(btn);
+
+        });
+
+        //--------------------------------------------------
+        // Mostrar primera pestaña
+        //--------------------------------------------------
+
+        const first=Object.keys(tabs)[0];
+
+        if(first){
+
+            show(first);
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Mostrar una pestaña
+    //--------------------------------------------------
+
+    function show(tabId){
+
+        current=tabId;
+
+        //--------------------------------------------------
+        // Activar pestaña
+        //--------------------------------------------------
+
+        document
+
+            .querySelectorAll(".ribbon-tab")
+
+            .forEach(btn=>{
+
+                btn.classList.remove("active");
+
+                if(btn.textContent==tabs[tabId].text){
+
+                    btn.classList.add("active");
+
+                }
+
+            });
+
+        renderBody();
+
+    }
+
+    //--------------------------------------------------
+    // Dibujar grupos
+    //--------------------------------------------------
+
+    function renderBody(){
+
+        const body=document.getElementById(
+
+            "sig-ribbon-body"
+
+        );
+
+        body.innerHTML="";
+
+        const tab=tabs[current];
+
+        Object.values(tab.groups).forEach(group=>{
+
+            const div=document.createElement("div");
+
+            div.className="ribbon-group";
+
+            //--------------------------------------------------
+            // Botones
+            //--------------------------------------------------
+
+            const buttons=document.createElement("div");
+
+            buttons.className="ribbon-buttons";
+
+            group.buttons.forEach(item=>{
+
+                const btn=document.createElement("button");
+
+                btn.className="ribbon-button";
+
+                btn.innerHTML=
+
+                    `<i class="${item.icon}"></i>
+                     <div>${item.text}</div>`;
+
+                btn.onclick=item.click;
+
+                buttons.appendChild(btn);
+
+            });
+
+            //--------------------------------------------------
+            // Título
+            //--------------------------------------------------
+
+            const title=document.createElement("div");
+
+            title.className="ribbon-group-title";
+
+            title.textContent=group.text;
+
+            //--------------------------------------------------
+
+            div.appendChild(buttons);
+
+            div.appendChild(title);
+
+            body.appendChild(div);
+
+        });
+
+    }
+
+    //--------------------------------------------------
+
+    function init(){
+
+        renderTabs();
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        addTab,
+
+        addGroup,
+
+        addButton,
+
+        init
+
+    };
+
+})();
+
+document.addEventListener(
+
+    "DOMContentLoaded",
+
+    ()=>{
+
+        SIG.Ribbon.init();
+
+    }
+
+);
+
+</script>
