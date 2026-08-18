@@ -229,6 +229,21 @@ SIG.Ribbon = (()=>{
     }
 
     //--------------------------------------------------
+    // Redibujar la pestaña actual (p.ej. después de agregar
+    // botones que llegaron async, ya con el ribbon visible)
+    //--------------------------------------------------
+
+    function refresh(){
+
+        if(current){
+
+            renderBody();
+
+        }
+
+    }
+
+    //--------------------------------------------------
 
     return{
 
@@ -238,7 +253,9 @@ SIG.Ribbon = (()=>{
 
         addButton,
 
-        init
+        init,
+
+        refresh
 
     };
 

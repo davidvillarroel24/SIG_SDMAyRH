@@ -30,6 +30,8 @@ SIG.Table = (()=>{
 
         console.log("[SIG.Table] pidiendo SIG_UD_get:", hoja);
 
+        SIG.Loading.show("Cargando " + hoja + "...");
+
         google.script.run
 
             .withSuccessHandler(render)
@@ -111,13 +113,41 @@ SIG.Table = (()=>{
 
         );
 
+        SIG.Loading.hide();
+
         if(dataTable){
 
             dataTable.destroy();
 
+            dataTable = null;
+
         }
 
         const columnas = buildColumns(resultado.schema);
+
+        // Sin columnas configuradas (CONFIGURACION_COLUMNAS sin filas
+        // para esta hoja) DataTables no tiene con qué armar la tabla —
+        // se muestra un aviso en vez de intentar dibujarla vacía.
+
+        const vacio = columnas.length === 0;
+
+        document
+
+            .getElementById("sig-table-vacio")
+
+            .classList.toggle("d-none", !vacio);
+
+        document
+
+            .getElementById("sig-table-contenido")
+
+            .classList.toggle("d-none", vacio);
+
+        if(vacio){
+
+            return;
+
+        }
 
         buildHead(columnas);
 
@@ -143,7 +173,12 @@ SIG.Table = (()=>{
 
         console.error("[SIG.Table] error en SIG_UD_get:", error);
 
-        alert(
+        // Se cancela el "ya estaba cargada" para que un reintento
+        // (volver a clickear el mismo botón) sí vuelva a pedir datos.
+
+        currentHoja = null;
+
+        SIG.Loading.error(
 
             "No se pudo cargar la tabla: " + error.message
 

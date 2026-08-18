@@ -30,15 +30,35 @@ function initApp(){
 
     );
 
+    SIG.Loading.show("Cargando geometrías...");
+
     google.script.run
 
     .withSuccessHandler(
 
-        SIG.Features.loadMany
+        items=>{
+
+            SIG.Loading.hide();
+
+            SIG.Features.loadMany(items);
+
+        }
 
     )
 
-    .SIG_Geometrias_list();
+    .withFailureHandler(
+
+        error=>{
+
+            console.error("[initApp] error en SIG_Geometrias_listConRegistros:", error);
+
+            SIG.Loading.error("No se pudieron cargar las geometrías: " + error.message);
+
+        }
+
+    )
+
+    .SIG_Geometrias_listConRegistros();
 
 
     loadConfig("MUNICIPIOS");

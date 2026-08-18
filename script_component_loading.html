@@ -1,0 +1,104 @@
+<script>
+
+//--------------------------------------------------
+// Indicador de carga/error reutilizable — una sola franja
+// (#sig-loading) para toda la app, en vez de que cada módulo
+// se las arregle solo para avisar si está pidiendo datos o si
+// algo falló.
+//--------------------------------------------------
+
+SIG.Loading = (()=>{
+
+    //--------------------------------------------------
+    // Mostrar estado "cargando"
+    //--------------------------------------------------
+
+    function show(texto){
+
+        document
+
+            .getElementById("sig-loading-spinner")
+
+            .classList.remove("d-none");
+
+        document
+
+            .getElementById("sig-loading-icon")
+
+            .classList.add("d-none");
+
+        document
+
+            .getElementById("sig-loading-text")
+
+            .textContent = texto;
+
+        document
+
+            .getElementById("sig-loading")
+
+            .classList.remove("d-none","is-error");
+
+    }
+
+    //--------------------------------------------------
+    // Mostrar estado "error" (queda visible hasta el próximo show/hide)
+    //--------------------------------------------------
+
+    function error(texto){
+
+        document
+
+            .getElementById("sig-loading-spinner")
+
+            .classList.add("d-none");
+
+        document
+
+            .getElementById("sig-loading-icon")
+
+            .classList.remove("d-none");
+
+        document
+
+            .getElementById("sig-loading-text")
+
+            .textContent = texto;
+
+        const box = document.getElementById("sig-loading");
+
+        box.classList.remove("d-none");
+
+        box.classList.add("is-error");
+
+    }
+
+    //--------------------------------------------------
+    // Ocultar
+    //--------------------------------------------------
+
+    function hide(){
+
+        document
+
+            .getElementById("sig-loading")
+
+            .classList.add("d-none");
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        show,
+        error,
+        hide
+
+    };
+
+})();
+
+console.log("[SIG.Loading] módulo cargado");
+
+</script>

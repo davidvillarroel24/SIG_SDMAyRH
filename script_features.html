@@ -9,6 +9,77 @@ SIG.Features = (()=>{
     const features = {};
 
     //--------------------------------------------------
+    // Evitar HTML/script sueltos en un popup (los valores
+    // vienen de celdas de la hoja, no son de confiar a ciegas)
+    //--------------------------------------------------
+
+    function escapeHtml(texto){
+
+        return String(texto ?? "")
+
+            .replace(/&/g,"&amp;")
+
+            .replace(/</g,"&lt;")
+
+            .replace(/>/g,"&gt;");
+
+    }
+
+    //--------------------------------------------------
+    // Popup: qué registro UD_ es esta geometría (cruce por
+    // SIG_GEOMETRIAS_ID), con los campos VISIBLE_MAPA del
+    // esquema de esa unidad. Sin registro cruzado, se usa el
+    // nombre/descripción propios de SIG_GEOMETRIAS si hay.
+    //--------------------------------------------------
+
+    function buildPopup(item){
+
+        if(item.registro){
+
+            const filas = item.registro.campos
+
+                .map(campo =>
+
+                    "<tr><td class='text-muted pe-2'>" +
+                    escapeHtml(campo.etiqueta) +
+                    "</td><td><strong>" +
+                    escapeHtml(campo.valor || "—") +
+                    "</strong></td></tr>"
+
+                )
+
+                .join("");
+
+            return(
+
+                "<div class='small'>" +
+                "<div class='fw-bold mb-1'>" +
+                escapeHtml(item.registro.etiqueta) +
+                "</div>" +
+                "<table>" + filas + "</table>" +
+                "</div>"
+
+            );
+
+        }
+
+        if(item.nombre){
+
+            return(
+
+                "<div class='small'>" +
+                escapeHtml(item.nombre) +
+                "</div>"
+
+            );
+
+        }
+
+        return null;
+
+    }
+
+    //--------------------------------------------------
     // Cargar una geometría
     //--------------------------------------------------
 
@@ -47,6 +118,14 @@ SIG.Features = (()=>{
             }
 
         );
+
+        const popup = buildPopup(item);
+
+        if(popup){
+
+            layer.bindPopup(popup);
+
+        }
 
         layer.addTo(
 

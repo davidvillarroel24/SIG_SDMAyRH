@@ -85,24 +85,6 @@ SIG.Ribbon.addGroup(
 
 );
 
-SIG.Ribbon.addButton(
-
-    "datos",
-
-    "unidades",
-
-    {
-
-        text:"Riego",
-
-        icon:"bi bi-table",
-
-        click:()=>SIG.Table.show("UD_RIEGOS")
-
-    }
-
-);
-
 //--------------------------------------------------
 // Pestaña Resumen
 //--------------------------------------------------
@@ -129,23 +111,85 @@ SIG.Ribbon.addGroup(
 
 );
 
-SIG.Ribbon.addButton(
+//--------------------------------------------------
+// Un botón por cada hoja UD_* que exista en el spreadsheet
+// (backend, no hardcodeado) — se agregan cuando llega la
+// respuesta, y se refresca el ribbon por si ya estaba
+// mostrando la pestaña Datos o Resumen.
+//--------------------------------------------------
 
-    "resumen",
+SIG.Loading.show("Cargando unidades...");
 
-    "unidades",
+google.script.run
 
-    {
+    .withSuccessHandler(unidades=>{
 
-        text:"Riego",
+        console.log("[script_ribbon_config] unidades:", unidades);
 
-        icon:"bi bi-graph-up",
+        SIG.Loading.hide();
 
-        click:()=>SIG.Summary.show("UD_RIEGOS")
+        unidades.forEach(u=>{
 
-    }
+            SIG.Ribbon.addButton(
 
-);
+                "datos",
+
+                "unidades",
+
+                {
+
+                    text: u.etiqueta,
+
+                    icon: "bi bi-table",
+
+                    click: ()=>SIG.Table.show(u.hoja)
+
+                }
+
+            );
+
+            SIG.Ribbon.addButton(
+
+                "resumen",
+
+                "unidades",
+
+                {
+
+                    text: u.etiqueta,
+
+                    icon: "bi bi-graph-up",
+
+                    click: ()=>SIG.Summary.show(u.hoja)
+
+                }
+
+            );
+
+        });
+
+        SIG.Ribbon.refresh();
+
+    })
+
+    .withFailureHandler(error=>{
+
+        console.error(
+
+            "[script_ribbon_config] error en SIG_UD_listUnidades:",
+            error
+
+        );
+
+        SIG.Loading.error(
+
+            "No se pudo cargar la lista de unidades: " + error.message
+
+        );
+
+    })
+
+    .SIG_UD_listUnidades();
 
 console.log("[script_ribbon_config] cargado");
 </script>

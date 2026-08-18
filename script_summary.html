@@ -45,6 +45,8 @@ SIG.Summary = (()=>{
 
         console.log("[SIG.Summary] pidiendo SIG_UD_get:", hoja);
 
+        SIG.Loading.show("Cargando " + hoja + "...");
+
         google.script.run
 
             .withSuccessHandler(render)
@@ -600,6 +602,8 @@ SIG.Summary = (()=>{
 
         );
 
+        SIG.Loading.hide();
+
         schema = resultado.schema;
 
         rows = resultado.rows;
@@ -616,7 +620,12 @@ SIG.Summary = (()=>{
 
         console.error("[SIG.Summary] error en SIG_UD_get:", error);
 
-        alert(
+        // Se cancela el "ya estaba cargada" para que un reintento
+        // (volver a clickear el mismo botón) sí vuelva a pedir datos.
+
+        currentHoja = null;
+
+        SIG.Loading.error(
 
             "No se pudo cargar el resumen: " + error.message
 

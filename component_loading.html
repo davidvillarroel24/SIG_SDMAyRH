@@ -1,0 +1,50 @@
+<style>
+
+#sig-loading{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:6px 14px;
+
+    background:#eef4ff;
+
+    border-bottom:1px solid #cfe0fb;
+
+    font-size:.85rem;
+
+    color:#0d47a1;
+
+}
+
+#sig-loading.is-error{
+
+    background:#f8d7da;
+
+    border-bottom-color:#f5c2c7;
+
+    color:#842029;
+
+}
+
+</style>
+
+<div id="sig-loading" class="d-none">
+
+    <span
+        id="sig-loading-spinner"
+        class="spinner-border spinner-border-sm"
+        role="status">
+    </span>
+
+    <i
+        id="sig-loading-icon"
+        class="bi bi-exclamation-triangle-fill d-none">
+    </i>
+
+    <span id="sig-loading-text"></span>
+
+</div>

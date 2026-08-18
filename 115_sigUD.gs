@@ -115,3 +115,93 @@ function SIG_UD_get(hoja){
     };
 
 }
+
+//--------------------------------------------------
+// Unidades disponibles: toda hoja UD_* que exista en el
+// spreadsheet, tenga o no filas cargadas o esquema en
+// CONFIGURACION_COLUMNAS todavía — así el ribbon no depende
+// de una lista fija en el frontend, agregar/quitar una hoja
+// UD_* aparece o desaparece solo.
+//--------------------------------------------------
+
+function SIG_UD_listUnidades(){
+
+    return SIG_getSpreadsheet()
+
+        .getSheets()
+
+        .map(sheet => sheet.getName())
+
+        .filter(nombre => nombre.indexOf("UD_") === 0)
+
+        .map(hoja => ({
+
+            hoja,
+
+            etiqueta: hoja
+
+                .slice(3)
+
+                .split("_")
+
+                .map(palabra =>
+
+                    palabra.charAt(0) + palabra.slice(1).toLowerCase()
+
+                )
+
+                .join(" ")
+
+        }));
+
+}
+
+//--------------------------------------------------
+// Índice SIG_GEOMETRIAS_ID -> registro de la unidad que lo
+// referencia, recorriendo todas las hojas UD_*. Es lo que
+// cruza cada geometría del mapa con "a qué proyecto pertenece".
+//--------------------------------------------------
+
+function SIG_UD_indiceGeometrias(){
+
+    const indice = {};
+
+    SIG_UD_listUnidades().forEach(unidad=>{
+
+        const schema = SIG_UD_getSchema(unidad.hoja);
+
+        const camposMapa = schema.filter(campo => campo.visibleMapa);
+
+        SIG_UD_getRows(unidad.hoja).forEach(row=>{
+
+            const geometriaId = row.SIG_GEOMETRIAS_ID;
+
+            if(!geometriaId){
+
+                return;
+
+            }
+
+            indice[geometriaId] = {
+
+                hoja     : unidad.hoja,
+
+                etiqueta : unidad.etiqueta,
+
+                campos   : camposMapa.map(campo => ({
+
+                    etiqueta : campo.etiqueta || campo.columna,
+
+                    valor    : row[campo.columna]
+
+                }))
+
+            };
+
+        });
+
+    });
+
+    return indice;
+
+}
