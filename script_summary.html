@@ -93,14 +93,15 @@ SIG.Summary = (()=>{
     }
 
     //--------------------------------------------------
-    // Valores únicos de una columna (para poblar un select)
+    // Valores únicos de una columna, sobre un subconjunto de filas
+    // (para poblar un select con las opciones que corresponden)
     //--------------------------------------------------
 
-    function uniqueValues(columna){
+    function uniqueValues(sourceRows, columna){
 
         const set = new Set();
 
-        rows.forEach(row=>{
+        sourceRows.forEach(row=>{
 
             const value = row[columna];
 
@@ -139,6 +140,29 @@ SIG.Summary = (()=>{
     }
 
     //--------------------------------------------------
+    // Filas que cumplen los filtros activos, salvo el de
+    // "columnaExcluida" — son las opciones válidas para el
+    // propio select de esa columna (filtros en cascada: cada
+    // uno se acota por los demás, sin depender de una jerarquía
+    // fija declarada a mano).
+    //--------------------------------------------------
+
+    function getRowsExcludingFilter(columnaExcluida){
+
+        return rows.filter(row=>
+
+            Object.entries(activeFilters).every(([columna,valor])=>
+
+                columna === columnaExcluida ||
+                String(row[columna]) === String(valor)
+
+            )
+
+        );
+
+    }
+
+    //--------------------------------------------------
     // Armar un <select> de filtro para una columna
     //--------------------------------------------------
 
@@ -166,7 +190,12 @@ SIG.Summary = (()=>{
 
         select.appendChild(optionTodos);
 
-        uniqueValues(campo.columna).forEach(valor=>{
+        uniqueValues(
+
+            getRowsExcludingFilter(campo.columna),
+            campo.columna
+
+        ).forEach(valor=>{
 
             const opt = document.createElement("option");
 
@@ -177,6 +206,8 @@ SIG.Summary = (()=>{
             select.appendChild(opt);
 
         });
+
+        select.value = activeFilters[campo.columna] || "";
 
         select.onchange = ()=>{
 
@@ -190,6 +221,12 @@ SIG.Summary = (()=>{
                 delete activeFilters[campo.columna];
 
             }
+
+            // Cambiar este filtro puede volver inválida la
+            // selección de otro (cascada) — se recalculan todos
+            // los <select>, no solo tarjetas/gráficas.
+
+            renderFilters();
 
             refresh();
 
@@ -209,6 +246,50 @@ SIG.Summary = (()=>{
 
     function renderFilters(){
 
+        const campos = getFilterFields();
+
+        // Si el valor elegido en un filtro ya no aparece entre las
+        // filas que cumplen los DEMÁS filtros activos (p.ej. cambió
+        // la Región y la Provincia elegida ya no pertenece a esa
+        // región), se limpia — evita dejarlo "pegado" mostrando 0
+        // resultados sin ninguna explicación.
+
+        campos.forEach(campo=>{
+
+            const valorActivo = activeFilters[campo.columna];
+
+            if(!valorActivo){
+
+                return;
+
+            }
+
+            const opciones = uniqueValues(
+
+                getRowsExcludingFilter(campo.columna),
+                campo.columna
+
+            );
+
+            // select.value siempre es string, pero un campo TIPO=NUM
+            // (ej. GESTION) trae valores numéricos en las filas — hay
+            // que comparar como string en los dos lados, igual que ya
+            // hace getFilteredRows/getRowsExcludingFilter.
+
+            const esValido = opciones.some(
+
+                opcion => String(opcion) === String(valorActivo)
+
+            );
+
+            if(!esValido){
+
+                delete activeFilters[campo.columna];
+
+            }
+
+        });
+
         const container = document.getElementById(
 
             "sig-summary-filters"
@@ -217,7 +298,7 @@ SIG.Summary = (()=>{
 
         container.innerHTML = "";
 
-        getFilterFields().forEach(campo=>{
+        campos.forEach(campo=>{
 
             container.appendChild(
 

@@ -1,10 +1,14 @@
 //--------------------------------------------------
 // Configuración de columnas por hoja (esquema dinámico)
-// Crea/reinicia CONFIGURACION_COLUMNAS con el piloto de UD_RIEGOS.
+// Crea/reinicia CONFIGURACION_COLUMNAS con la configuración de
+// las unidades ya definidas (UD_RIEGOS, UD_RESIDUOS_SOLIDOS).
 // Es un script de configuración: ejecutar manualmente desde el
 // editor de Apps Script (seleccionar la función y "Ejecutar"),
 // no se llama desde el frontend. Es idempotente: se puede volver
-// a correr después de ajustar los valores de abajo.
+// a correr después de ajustar los valores de abajo — pero OJO,
+// hace `sh.clear()` y reescribe toda la hoja, así que cualquier
+// edición manual hecha directo en CONFIGURACION_COLUMNAS desde la
+// última vez que se corrió esto se pierde.
 //--------------------------------------------------
 
 function SIG_Setup_ConfiguracionColumnas(){
@@ -71,7 +75,33 @@ function SIG_Setup_ConfiguracionColumnas(){
         ["UD_RIEGOS","LONGITUD","Longitud","DEC","dato","","","","HID",997,false,false,false],
         ["UD_RIEGOS","LATITUD","Latitud","DEC","dato","","","","HID",996,false,false,false],
         ["UD_RIEGOS","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false],
-        ["UD_RIEGOS","OBSERVACIONES","Observaciones","TEXTO","dato","","","","texto",60,false,false,true]
+        ["UD_RIEGOS","OBSERVACIONES","Observaciones","TEXTO","dato","","","","texto",60,false,false,true],
+
+        //--------------------------------------------------
+        // Las 15 columnas reales de UD_RESIDUOS_SOLIDOS. A
+        // diferencia de UD_RIEGOS, acá REGIONES/PROVINCIAS/
+        // MUNICIPIOS no llevan sufijo "_ID" (son los nombres
+        // reales de columna en la hoja). "URBANO_TONALEDAS" no
+        // es un error de tipeo nuestro: así está escrito el
+        // encabezado real en la hoja, hay que respetarlo tal
+        // cual para que SIG_getRows encuentre la columna.
+        //--------------------------------------------------
+
+        ["UD_RESIDUOS_SOLIDOS","ID","ID","NUM","PK","","","","HID",0,false,false,false],
+        ["UD_RESIDUOS_SOLIDOS","BOTADERO","Botadero","TEXTO","dato","","","","texto",1,true,true,true],
+        ["UD_RESIDUOS_SOLIDOS","REGIONES","Región","TEXTO","FK","REGIONES","","","SEL",2,true,true,true],
+        ["UD_RESIDUOS_SOLIDOS","PROVINCIAS","Provincia","TEXTO","FK","PROVINCIAS","","","SEL",3,true,true,true],
+        ["UD_RESIDUOS_SOLIDOS","MUNICIPIOS","Municipio","TEXTO","FK","MUNICIPIOS","","","SEL",4,true,true,true],
+        ["UD_RESIDUOS_SOLIDOS","LICENCIA","Licencia","TEXTO","dato","","","PIE","SEL",5,true,false,true],
+        ["UD_RESIDUOS_SOLIDOS","RIESGO","Riesgo","TEXTO","dato","","","PIE","SEL",6,true,true,true],
+        ["UD_RESIDUOS_SOLIDOS","AREA_HA","Área (ha)","DEC","dato","","SUM","BAR","texto",10,true,false,true],
+        ["UD_RESIDUOS_SOLIDOS","URBANO_TONALEDAS","Toneladas urbanas","DEC","dato","","SUM","BAR","texto",11,true,false,true],
+        ["UD_RESIDUOS_SOLIDOS","RURAL_TONELADAS","Toneladas rurales","DEC","dato","","SUM","BAR","texto",12,true,false,true],
+        ["UD_RESIDUOS_SOLIDOS","TOTAL_TONELADAS","Toneladas totales","DEC","dato","","SUM","BAR","texto",13,true,false,true],
+        ["UD_RESIDUOS_SOLIDOS","SITUACION_ACTUAL","Situación actual","TEXTO","dato","","","","texto",20,false,false,true],
+        ["UD_RESIDUOS_SOLIDOS","PROYECTO","Proyecto (detalle)","TEXTO","dato","","","","texto",21,false,false,true],
+        ["UD_RESIDUOS_SOLIDOS","SIG_GEOMETRIAS_ID","Geometría","NUM","FK","SIG_GEOMETRIAS","","","HID",998,false,false,false],
+        ["UD_RESIDUOS_SOLIDOS","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false]
 
     ];
 
@@ -85,7 +115,7 @@ function SIG_Setup_ConfiguracionColumnas(){
 
         "CONFIGURACION_COLUMNAS creada con " +
         filas.length +
-        " columnas de UD_RIEGOS."
+        " filas (UD_RIEGOS + UD_RESIDUOS_SOLIDOS)."
 
     );
 
