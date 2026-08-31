@@ -16,19 +16,11 @@ function initApp(){
 
     console.log("Motor SIG iniciado");
 
-    google.script.run
-
-    .withSuccessHandler(
-
-        SIG.LayerPanel.render
-
-    )
-
-    .SIG_Config_getLayerConfig(
-
-        "MUNICIPIOS"
-
-    );
+    // Municipios se pide una sola vez, más abajo con
+    // loadConfig("MUNICIPIOS") (línea ~64) — antes también se
+    // pedía acá directo, duplicando la lectura de la hoja y el
+    // render del panel de capas sin ningún orden garantizado
+    // entre las dos respuestas.
 
     SIG.Loading.show("Cargando geometrías...");
 

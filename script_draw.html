@@ -76,19 +76,21 @@ SIG.Draw = (() => {
 
               },
 
+              onOpen:(ctx)=>{
+
+                  const form = document.querySelector("#sig-modal-body");
+
+                  SIG.Geometry.setupLinkFields(form);
+
+                  SIG.Geometry.setupCapaEstiloFields(form);
+
+              },
+
               onSave:(ctx)=>{
 
                   const form = document.querySelector("#sig-modal-body");
 
-                  const geo = SIG.Geometry.build(
-
-                      ctx.data.layer,
-
-                      form
-
-                  );
-
-                  console.log(geo);
+                  return SIG.Geometry.save(ctx.data.layer, form);
 
               }
 

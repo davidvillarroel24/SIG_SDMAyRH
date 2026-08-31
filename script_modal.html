@@ -44,19 +44,78 @@ SIG.Modal = (()=>{
 
         modal.style.display = "flex";
 
-        const btn = body.querySelector("#btn-save-geometry");
+        // Hook opcional: correr algo justo después de que el
+        // componente ya está clonado en el DOM (precargar campos
+        // en modo edición, armar selects que dependen de datos
+        // pedidos al backend, etc.) — SIG.Modal no necesita saber
+        // nada de geometrías/registros para esto.
+
+        if(options.onOpen){
+
+            options.onOpen(context);
+
+        }
+
+        const btn = body.querySelector("#btn-modal-save");
 
         if(btn){
 
             btn.onclick = ()=>{
 
-                if(context.onSave){
+                if(!context.onSave){
 
-                    context.onSave(context);
+                    hide();
+
+                    return;
 
                 }
 
-                hide();
+                // Mientras la promesa está en vuelo, deshabilitado —
+                // sin esto, dos clics rápidos disparan dos guardados
+                // (dos filas/geometrías nuevas) antes de que el
+                // primero termine y el modal se cierre.
+
+                if(btn.disabled){
+
+                    return;
+
+                }
+
+                btn.disabled = true;
+
+                // onSave puede tardar (google.script.run) — el modal
+                // se cierra solo si terminó bien. Si falla, se deja
+                // abierto (el error ya se ve en SIG.Loading) para
+                // que el usuario pueda corregir y reintentar sin
+                // perder lo que había escrito en el formulario.
+
+                Promise.resolve(
+
+                    context.onSave(context)
+
+                ).then(resultado=>{
+
+                    hide();
+
+                    // Hook opcional: avisar a quien abrió el modal
+                    // que el guardado terminó bien (p.ej. para que
+                    // la tabla se refresque sola con el dato nuevo).
+
+                    if(context.onSaved){
+
+                        context.onSaved(resultado, context);
+
+                    }
+
+                }).catch(error=>{
+
+                    console.error("[SIG.Modal] error al guardar:", error);
+
+                }).finally(()=>{
+
+                    btn.disabled = false;
+
+                });
 
             };
 

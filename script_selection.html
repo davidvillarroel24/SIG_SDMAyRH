@@ -116,19 +116,65 @@ SIG.Selection = (() => {
 
           },
 
-          onSave:(ctx)=>{
+          onOpen:(ctx)=>{
 
-              const form=document.querySelector("#sig-modal-body");
+              const form = document.querySelector("#sig-modal-body");
 
-              const geo=SIG.Geometry.build(
+              const item = ctx.data.layer.geometriaData;
 
-                  ctx.data.layer,
+              if(item){
 
-                  form
+                  SIG.Geometry.prefill(form, item);
+
+              }
+
+              const seleccionActual = item && item.registro
+
+                  ? {
+
+                      hoja: item.registro.hoja,
+
+                      registroId: item.registro.registroId
+
+                    }
+
+                  : null;
+
+              SIG.Geometry.setupLinkFields(form, seleccionActual);
+
+              SIG.Geometry.setupCapaEstiloFields(
+
+                  form,
+                  item ? item.capa_id : null,
+                  item ? item.estilo_id : null
 
               );
 
-              console.log(geo);
+              const btnDelete = form.querySelector("#btn-delete-geometry");
+
+              if(btnDelete){
+
+                  btnDelete.onclick = ()=>{
+
+                      SIG.Geometry
+
+                          .remove(ctx.data.layer)
+
+                          .then(SIG.Modal.hide)
+
+                          .catch(()=>{});
+
+                  };
+
+              }
+
+          },
+
+          onSave:(ctx)=>{
+
+              const form = document.querySelector("#sig-modal-body");
+
+              return SIG.Geometry.save(ctx.data.layer, form);
 
           }
 

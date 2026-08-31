@@ -49,7 +49,7 @@ SIG.Summary = (()=>{
 
         google.script.run
 
-            .withSuccessHandler(render)
+            .withSuccessHandler(resultado => render(hoja, resultado))
 
             .withFailureHandler(onError)
 
@@ -360,21 +360,7 @@ SIG.Summary = (()=>{
 
     }
 
-    //--------------------------------------------------
-    // Formato numérico local
-    //--------------------------------------------------
-
-    function formatNumber(valor){
-
-        return new Intl.NumberFormat(
-
-            "es-BO",
-
-            { maximumFractionDigits:2 }
-
-        ).format(valor);
-
-    }
+    const formatNumber = SIG.Utils.formatNumber;
 
     //--------------------------------------------------
     // Dibujar tarjetas de resumen (según filtros activos)
@@ -672,7 +658,25 @@ SIG.Summary = (()=>{
     // Esquema + filas ya resueltos por el backend
     //--------------------------------------------------
 
-    function render(resultado){
+    function render(hoja, resultado){
+
+        // Si el usuario cambió de hoja antes de que esto llegara,
+        // esta respuesta ya es vieja — no pisar lo que se está
+        // mostrando ahora.
+
+        if(hoja !== currentHoja){
+
+            console.log(
+
+                "[SIG.Summary] respuesta vieja descartada:",
+                hoja,
+                "(hoja actual:", currentHoja + ")"
+
+            );
+
+            return;
+
+        }
 
         console.log(
 

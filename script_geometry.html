@@ -2,26 +2,57 @@
 
 SIG.Geometry = (()=>{
 
+    let unidadesCache = null;
+
+    let capasCache = null;
+
+    let estilosCache = null;
+
+    //--------------------------------------------------
+    // Una geometría recién dibujada (Leaflet.Draw) es un layer
+    // suelto — su toGeoJSON() ya da un Feature. Una geometría
+    // cargada del mapa (SIG.Features.load) viene envuelta en un
+    // L.geoJSON(), que Leaflet trata como grupo — su toGeoJSON()
+    // da una FeatureCollection (sin .geometry propio), aunque
+    // adentro solo tenga una geometría. Esto normaliza los dos
+    // casos a un Feature suelto.
     //--------------------------------------------------
 
-    function getType(layer){
+    function toFeature(layer){
 
-        return layer
-                .toGeoJSON()
-                .geometry
-                .type;
+        const geo = layer.toGeoJSON();
+
+        return geo.type === "FeatureCollection"
+
+            ? geo.features[0]
+
+            : geo;
 
     }
 
     //--------------------------------------------------
 
-    function build(layer,form){
+    function getType(layer){
 
-      const geoFeature = layer.toGeoJSON();
+        return toFeature(layer)
+
+                .geometry
+
+                .type;
+
+    }
+
+    //--------------------------------------------------
+    // Arma el objeto a guardar. layer.geometriaId (si ya existe,
+    // geometría cargada del mapa o recién guardada) es lo que
+    // distingue actualizar de insertar — ver SIG_Geometrias_save.
+    //--------------------------------------------------
+
+    function build(layer,form){
 
       return{
 
-          id:null,
+          id: layer.geometriaId || null,
 
           capa_id:Number(
               SIG.Form.get(form,"geo_capa")
@@ -33,7 +64,7 @@ SIG.Geometry = (()=>{
 
           tipo:getType(layer),
 
-          feature:geoFeature,
+          feature:toFeature(layer),
 
           nombre:
               SIG.Form.get(form,"geo_nombre"),
@@ -41,23 +72,453 @@ SIG.Geometry = (()=>{
           descripcion:
               SIG.Form.get(form,"geo_descripcion"),
 
-          estado:
-              SIG.Form.get(form,"geo_estado"),
+          // "estado" no se arma acá — ya no es un dato que el
+          // usuario tipee, se deriva de si hay un registro
+          // vinculado o no (ver prefill/badge). SIG_Geometrias_save
+          // tampoco lo escribe más.
 
           eliminado:false
 
       };
 
-  }
+    }
 
-    
     //--------------------------------------------------
-    
+    // Campo "identidad" de una unidad: el de menor ORDEN en su
+    // esquema (mismo criterio ya usado a mano para NOMBRE_DEL_
+    // PROYECTO/BOTADERO al diseñar CONFIGURACION_COLUMNAS) — arma
+    // la etiqueta de cada registro en el <select> de vínculo sin
+    // hardcodear un nombre de columna por unidad.
+    //--------------------------------------------------
+
+    function getLabelField(schema){
+
+        // La clave primaria (ID) también puede tener el ORDEN más
+        // chico (0, por convención) — si no se excluye, "el campo
+        // de menor orden" termina siendo "ID", y el <select> de
+        // registro muestra números pelados en vez de nombres.
+
+        const ordenados = schema
+
+            .filter(campo => campo.rol !== "PK")
+
+            .sort((a,b) => a.orden - b.orden);
+
+        return ordenados.length ? ordenados[0].columna : "ID";
+
+    }
+
+    //--------------------------------------------------
+    // Poblar el <select> de unidades + el de registros (depende
+    // de la unidad elegida). `seleccionActual` (opcional) precarga
+    // ambos en modo edición, si la geometría ya estaba vinculada.
+    //--------------------------------------------------
+
+    async function setupLinkFields(form, seleccionActual){
+
+        const selectHoja = form.querySelector("#geo_hoja");
+
+        const selectRegistro = form.querySelector("#geo_registro");
+
+        try{
+
+            if(!unidadesCache){
+
+                unidadesCache = await SIG.Utils.run("SIG_UD_listUnidades");
+
+            }
+
+            unidadesCache.forEach(u=>{
+
+                const opt = document.createElement("option");
+
+                opt.value = u.hoja;
+
+                opt.textContent = u.etiqueta;
+
+                selectHoja.appendChild(opt);
+
+            });
+
+        }
+        catch(error){
+
+            console.error("[SIG.Geometry] error al listar unidades:", error);
+
+            return;
+
+        }
+
+        async function poblarRegistros(hoja, registroSeleccionado){
+
+            if(!hoja){
+
+                selectRegistro.innerHTML = '<option value="">—</option>';
+
+                selectRegistro.disabled = true;
+
+                return;
+
+            }
+
+            selectRegistro.disabled = false;
+
+            selectRegistro.innerHTML = '<option value="">Cargando...</option>';
+
+            try{
+
+                const resultado = await SIG.Utils.run("SIG_UD_get", hoja);
+
+                const campoEtiqueta = getLabelField(resultado.schema);
+
+                selectRegistro.innerHTML = '<option value="">—</option>';
+
+                resultado.rows.forEach(row=>{
+
+                    const opt = document.createElement("option");
+
+                    opt.value = row.ID;
+
+                    opt.textContent = row[campoEtiqueta] || ("ID " + row.ID);
+
+                    selectRegistro.appendChild(opt);
+
+                });
+
+                if(registroSeleccionado){
+
+                    selectRegistro.value = registroSeleccionado;
+
+                }
+
+            }
+            catch(error){
+
+                console.error("[SIG.Geometry] error al listar registros de " + hoja + ":", error);
+
+                selectRegistro.innerHTML = '<option value="">(error al cargar)</option>';
+
+            }
+
+        }
+
+        selectHoja.onchange = ()=> poblarRegistros(selectHoja.value, null);
+
+        if(seleccionActual && seleccionActual.hoja){
+
+            selectHoja.value = seleccionActual.hoja;
+
+            await poblarRegistros(
+
+                seleccionActual.hoja,
+                seleccionActual.registroId
+
+            );
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Poblar Capa/Estilo con datos reales (SIG_CAPAS/SIG_ESTILOS)
+    // en vez de las opciones hardcodeadas que había antes — esas
+    // no coincidían con la hoja real, y como el CRUD ahora
+    // escribe estos IDs, una lista desactualizada escribía FKs
+    // equivocados a la base.
+    //--------------------------------------------------
+
+    async function setupCapaEstiloFields(form, capaActual, estiloActual){
+
+        const selectCapa = form.querySelector("#geo_capa");
+
+        const selectEstilo = form.querySelector("#geo_estilo");
+
+        try{
+
+            if(!capasCache){
+
+                capasCache = await SIG.Utils.run("SIG_Capas_list");
+
+            }
+
+            selectCapa.innerHTML = "";
+
+            capasCache.forEach(capa=>{
+
+                const opt = document.createElement("option");
+
+                opt.value = capa.id;
+
+                opt.textContent = capa.nombre;
+
+                selectCapa.appendChild(opt);
+
+            });
+
+            if(capaActual){
+
+                selectCapa.value = capaActual;
+
+            }
+
+        }
+        catch(error){
+
+            console.error("[SIG.Geometry] error al listar capas:", error);
+
+            selectCapa.innerHTML = '<option value="">(error al cargar)</option>';
+
+        }
+
+        try{
+
+            if(!estilosCache){
+
+                estilosCache = await SIG.Utils.run("SIG_Config_getStyles");
+
+            }
+
+            selectEstilo.innerHTML = "";
+
+            estilosCache.forEach(estilo=>{
+
+                const opt = document.createElement("option");
+
+                opt.value = estilo.id;
+
+                opt.textContent = estilo.nombre;
+
+                selectEstilo.appendChild(opt);
+
+            });
+
+            if(estiloActual){
+
+                selectEstilo.value = estiloActual;
+
+            }
+
+        }
+        catch(error){
+
+            console.error("[SIG.Geometry] error al listar estilos:", error);
+
+            selectEstilo.innerHTML = '<option value="">(error al cargar)</option>';
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Precargar el formulario con los datos de una geometría
+    // existente (modo edición) + mostrar el botón Eliminar.
+    //--------------------------------------------------
+
+    function prefill(form, item){
+
+        SIG.Form.set(form, "geo_nombre", item.nombre || "");
+
+        SIG.Form.set(form, "geo_descripcion", item.descripcion || "");
+
+        // Capa/Estilo no se precargan acá — setupCapaEstiloFields
+        // recién arma esos <select> después (son async), y ahí es
+        // donde se selecciona el valor actual una vez que existen
+        // las opciones reales.
+
+        // El badge muestra si está vinculada, no un "estado" que
+        // el usuario tipeaba antes — ver README, la vinculación es
+        // exclusiva (una geometría, un registro).
+
+        const badge = form.querySelector("#geo_badge");
+
+        if(badge){
+
+            if(item.registro){
+
+                badge.textContent = "Vinculada: " + item.registro.etiqueta;
+
+                badge.className = "badge bg-success";
+
+            }
+            else{
+
+                badge.textContent = "Sin vincular";
+
+                badge.className = "badge bg-secondary";
+
+            }
+
+        }
+
+        const tipo = form.querySelector("#geo_tipo");
+
+        if(tipo){
+
+            tipo.textContent = item.tipo || "";
+
+        }
+
+        const btnDelete = form.querySelector("#btn-delete-geometry");
+
+        if(btnDelete){
+
+            btnDelete.classList.remove("d-none");
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Guardar (crear o actualizar la geometría) + vincular o
+    // desvincular el registro elegido, en un solo flujo.
+    //--------------------------------------------------
+
+    async function save(layer, form){
+
+        const geo = build(layer, form);
+
+        SIG.Loading.show(
+
+            geo.id ? "Guardando geometría..." : "Creando geometría..."
+
+        );
+
+        try{
+
+            const resultado = await SIG.Utils.run(
+
+                "SIG_Geometrias_save",
+                geo
+
+            );
+
+            layer.geometriaId = resultado.ID;
+
+            const hoja = SIG.Form.get(form,"geo_hoja");
+
+            const registroId = SIG.Form.get(form,"geo_registro");
+
+            // Vincula el registro elegido y, en el mismo paso,
+            // desvincula cualquier OTRA fila que hoy reclame esta
+            // geometría (una geometría es de un solo registro —
+            // ver SIG_UD_vincularGeometria). Si hoja/registroId
+            // vienen vacíos ("Sin vincular"), solo desvincula.
+
+            await SIG.Utils.run(
+
+                "SIG_UD_vincularGeometria",
+                resultado.ID,
+                hoja,
+                registroId
+
+            );
+
+            // Si se vuelve a editar esta misma geometría en la
+            // misma sesión (sin recargar), que el formulario ya
+            // aparezca con lo que se acaba de guardar en vez de
+            // vacío (geometriaData solo se llenaba al cargar del
+            // mapa, nunca después de un guardado).
+
+            const unidad = (unidadesCache || []).find(u => u.hoja === hoja);
+
+            layer.geometriaData = {
+
+                ...geo,
+
+                id: resultado.ID,
+
+                registro: (hoja && registroId)
+
+                    ? { hoja, registroId, etiqueta: unidad ? unidad.etiqueta : hoja }
+
+                    : null
+
+            };
+
+            SIG.Loading.hide();
+
+            return resultado;
+
+        }
+        catch(error){
+
+            console.error("[SIG.Geometry] error al guardar:", error);
+
+            SIG.Loading.error(
+
+                "No se pudo guardar la geometría: " + error.message
+
+            );
+
+            throw error;
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Eliminar (baja lógica en la hoja) + sacarla del mapa.
+    //--------------------------------------------------
+
+    async function remove(layer){
+
+        if(!layer.geometriaId){
+
+            return;
+
+        }
+
+        SIG.Loading.show("Eliminando geometría...");
+
+        try{
+
+            await SIG.Utils.run(
+
+                "SIG_Geometrias_delete",
+                layer.geometriaId
+
+            );
+
+            SIG.Loading.hide();
+
+            // Si la geometría vino de SIG.Features.load (mapa
+            // cargado al inicio), esto la saca del mapa y de su
+            // registro interno. Si es una recién dibujada en esta
+            // misma sesión, SIG.Features no la conoce (nunca pasó
+            // por load) — se saca del mapa directo como respaldo.
+
+            SIG.Features.remove(layer.geometriaId);
+
+            SIG.Map.get().removeLayer(layer);
+
+        }
+        catch(error){
+
+            console.error("[SIG.Geometry] error al eliminar:", error);
+
+            SIG.Loading.error(
+
+                "No se pudo eliminar la geometría: " + error.message
+
+            );
+
+            throw error;
+
+        }
+
+    }
+
+    //--------------------------------------------------
 
     return{
 
         build,
-        getType
+        getType,
+        setupLinkFields,
+        setupCapaEstiloFields,
+        prefill,
+        save,
+        remove
 
     };
 

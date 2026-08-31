@@ -1,9 +1,79 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <base target="_top">
-  </head>
-  <body>
-    
-  </body>
-</html>
+<script>
+
+//--------------------------------------------------
+// Helpers chicos compartidos entre módulos — evita que cada
+// uno reescriba su propio escapeHtml/formatNumber.
+//--------------------------------------------------
+
+SIG.Utils = (()=>{
+
+    //--------------------------------------------------
+    // Evitar HTML/script sueltos en contenido armado a mano
+    // (valores de celdas de la hoja, no son de confiar a ciegas)
+    //--------------------------------------------------
+
+    function escapeHtml(texto){
+
+        return String(texto ?? "")
+
+            .replace(/&/g,"&amp;")
+
+            .replace(/</g,"&lt;")
+
+            .replace(/>/g,"&gt;");
+
+    }
+
+    //--------------------------------------------------
+    // Formato numérico local (es-BO)
+    //--------------------------------------------------
+
+    function formatNumber(valor){
+
+        return new Intl.NumberFormat(
+
+            "es-BO",
+
+            { maximumFractionDigits:2 }
+
+        ).format(valor);
+
+    }
+
+    //--------------------------------------------------
+    // Envolver google.script.run en una Promise — mismo patrón
+    // que ya tenía SIG.Loader.load() a mano, ahora reutilizable
+    // por cualquier módulo (guardado de geometrías/registros).
+    //--------------------------------------------------
+
+    function run(nombreFuncion, ...args){
+
+        return new Promise((resolve, reject)=>{
+
+            google.script.run
+
+                .withSuccessHandler(resolve)
+
+                .withFailureHandler(reject)
+
+                [nombreFuncion](...args);
+
+        });
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        escapeHtml,
+        formatNumber,
+        run
+
+    };
+
+})();
+
+console.log("[SIG.Utils] módulo cargado");
+
+</script>

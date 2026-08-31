@@ -33,9 +33,9 @@
 
                     <span
                         id="geo_badge"
-                        class="badge bg-success">
+                        class="badge bg-secondary">
 
-                        ACTIVO
+                        Sin vincular
 
                     </span>
 
@@ -108,11 +108,7 @@
                     id="geo_capa"
                     class="form-select">
 
-                    <option value="1">
-
-                        Proyectos
-
-                    </option>
+                    <option value="">Cargando...</option>
 
                 </select>
 
@@ -130,23 +126,7 @@
                     id="geo_estilo"
                     class="form-select">
 
-                    <option value="1">
-
-                        Proyecto
-
-                    </option>
-
-                    <option value="2">
-
-                        Municipio
-
-                    </option>
-
-                    <option value="3">
-
-                        Riesgo
-
-                    </option>
+                    <option value="">Cargando...</option>
 
                 </select>
 
@@ -154,31 +134,54 @@
 
         </div>
 
-        <div class="mb-4">
+        <!-- ===================================== -->
+        <!-- VÍNCULO A UN REGISTRO -->
+        <!-- ===================================== -->
 
-            <label class="form-label">
+        <h6 class="border-bottom pb-2 mb-3">
 
-                Estado
+            Registro relacionado (opcional)
 
-            </label>
+        </h6>
 
-            <select
-                id="geo_estado"
-                class="form-select">
+        <div class="row mb-4">
 
-                <option>
+            <div class="col-md-6 mb-3">
 
-                    ACTIVO
+                <label class="form-label">
 
-                </option>
+                    Unidad
 
-                <option>
+                </label>
 
-                    INACTIVO
+                <select
+                    id="geo_hoja"
+                    class="form-select">
 
-                </option>
+                    <option value="">Sin vincular</option>
 
-            </select>
+                </select>
+
+            </div>
+
+            <div class="col-md-6 mb-3">
+
+                <label class="form-label">
+
+                    Registro
+
+                </label>
+
+                <select
+                    id="geo_registro"
+                    class="form-select"
+                    disabled>
+
+                    <option value="">—</option>
+
+                </select>
+
+            </div>
 
         </div>
 
@@ -187,6 +190,15 @@
         <!-- ===================================== -->
 
         <div class="d-flex justify-content-end gap-2">
+
+          <button
+              id="btn-delete-geometry"
+              class="btn btn-outline-danger me-auto d-none">
+
+              <i class="bi bi-trash"></i>
+              Eliminar
+
+          </button>
 
           <button
               class="btn btn-outline-secondary"
@@ -198,7 +210,7 @@
           </button>
 
           <button
-              id="btn-save-geometry"
+              id="btn-modal-save"
               class="btn btn-primary">
 
               <i class="bi bi-floppy"></i>

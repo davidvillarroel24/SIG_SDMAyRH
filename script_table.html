@@ -34,7 +34,7 @@ SIG.Table = (()=>{
 
         google.script.run
 
-            .withSuccessHandler(render)
+            .withSuccessHandler(resultado => render(hoja, resultado))
 
             .withFailureHandler(onError)
 
@@ -58,7 +58,7 @@ SIG.Table = (()=>{
 
     function buildColumns(schema){
 
-        return schema
+        const columnas = schema
 
             .filter(campo => campo.visibleTabla)
 
@@ -69,6 +69,65 @@ SIG.Table = (()=>{
                 title : campo.etiqueta || campo.columna
 
             }));
+
+        // Columna de acción (editar) al final — no sale del
+        // esquema, se agrega siempre que haya al menos una
+        // columna visible (si no hay ninguna, ya se muestra el
+        // aviso de "sin configurar" en vez de la tabla).
+
+        columnas.push({
+
+            data           : null,
+
+            title          : "",
+
+            orderable      : false,
+
+            className      : "text-center",
+
+            defaultContent :
+
+                '<button type="button" ' +
+                'class="btn btn-sm btn-outline-secondary btn-editar-registro" ' +
+                'title="Editar">' +
+                '<i class="bi bi-pencil-square"></i>' +
+                '</button>'
+
+        });
+
+        return columnas;
+
+    }
+
+    //--------------------------------------------------
+    // Reemplazar la <table> entera por una limpia. DataTables
+    // asocia su instancia a los <th> puntuales que existían al
+    // inicializar — reusar el mismo nodo y solo cambiarle las
+    // columnas por dentro (aunque sea después de destroy()) deja
+    // referencias viejas dando vueltas y termina en warnings tipo
+    // "Cannot reinitialise"/"Incorrect column count". Empezar de
+    // un <table> que DataTables nunca vio evita el problema de raíz.
+    //--------------------------------------------------
+
+    function resetTableElement(){
+
+        const anterior = document.getElementById(
+
+            "sig-table-datatable"
+
+        );
+
+        const nueva = document.createElement("table");
+
+        nueva.id = anterior.id;
+
+        nueva.className = anterior.className;
+
+        nueva.innerHTML =
+
+            '<thead><tr id="sig-table-head-row"></tr></thead><tbody></tbody>';
+
+        anterior.replaceWith(nueva);
 
     }
 
@@ -102,7 +161,26 @@ SIG.Table = (()=>{
     // Render (esquema + filas ya resueltos por el backend)
     //--------------------------------------------------
 
-    function render(resultado){
+    function render(hoja, resultado){
+
+        // Si el usuario cambió de hoja antes de que esto llegara,
+        // esta respuesta ya es vieja — no pisar lo que se está
+        // mostrando ahora (la respuesta de la hoja actual, si no
+        // llegó todavía, va a hacer su propio render cuando llegue).
+
+        if(hoja !== currentHoja){
+
+            console.log(
+
+                "[SIG.Table] respuesta vieja descartada:",
+                hoja,
+                "(hoja actual:", currentHoja + ")"
+
+            );
+
+            return;
+
+        }
 
         console.log(
 
@@ -149,6 +227,8 @@ SIG.Table = (()=>{
 
         }
 
+        resetTableElement();
+
         buildHead(columnas);
 
         dataTable = $("#sig-table-datatable").DataTable({
@@ -164,6 +244,32 @@ SIG.Table = (()=>{
             }
 
         });
+
+    }
+
+    //--------------------------------------------------
+    // Volver a pedir los datos de la hoja actual (después de
+    // crear/editar un registro) — a diferencia de show(), no
+    // se corta por el chequeo de "ya estaba cargada".
+    //--------------------------------------------------
+
+    function reload(){
+
+        if(!currentHoja){
+
+            return;
+
+        }
+
+        SIG.Loading.show("Actualizando " + currentHoja + "...");
+
+        SIG.Utils
+
+            .run("SIG_UD_get", currentHoja)
+
+            .then(resultado => render(currentHoja, resultado))
+
+            .catch(onError);
 
     }
 
@@ -195,6 +301,43 @@ SIG.Table = (()=>{
             .getElementById("btn-table-volver-mapa")
 
             .onclick = hide;
+
+        document
+
+            .getElementById("btn-table-nuevo-registro")
+
+            .onclick = ()=>{
+
+                if(currentHoja){
+
+                    SIG.Record.open(currentHoja, null, reload);
+
+                }
+
+            };
+
+        // Delegado sobre #sig-table-contenido (no sobre la
+        // <table>: resetTableElement() la reemplaza en cada
+        // cambio de hoja, un listener puesto directo ahí se
+        // perdería con el nodo viejo).
+
+        $("#sig-table-contenido").on(
+
+            "click",
+            ".btn-editar-registro",
+            function(){
+
+                const fila = dataTable
+
+                    .row($(this).closest("tr"))
+
+                    .data();
+
+                SIG.Record.open(currentHoja, fila, reload);
+
+            }
+
+        );
 
     }
 

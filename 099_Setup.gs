@@ -111,11 +111,26 @@ function SIG_Setup_ConfiguracionColumnas(){
 
     sh.setFrozenRows(1);
 
+    // Sin esto, correr el setup de nuevo (para agregar/ajustar una
+    // columna) no se nota hasta 6h después: SIG_UD_getSchema cachea
+    // el esquema viejo y sigue sirviéndolo. Se invalida acá, no
+    // adentro de SIG_UD_getSchema, porque el que sabe cuándo cambió
+    // CONFIGURACION_COLUMNAS es este setup, no cada lectura.
+
+    const hojasTocadas = [...new Set(filas.map(fila => fila[0]))];
+
+    hojasTocadas.forEach(hoja=>{
+
+        SIG_Cache_remove("ud_schema_" + hoja);
+
+    });
+
     Logger.log(
 
         "CONFIGURACION_COLUMNAS creada con " +
         filas.length +
-        " filas (UD_RIEGOS + UD_RESIDUOS_SOLIDOS)."
+        " filas (UD_RIEGOS + UD_RESIDUOS_SOLIDOS). Cache de esquema invalidada para: " +
+        hojasTocadas.join(", ")
 
     );
 

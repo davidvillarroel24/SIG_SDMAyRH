@@ -1,0 +1,425 @@
+<script>
+
+//--------------------------------------------------
+// Alta/edición de un registro de una unidad (UD_*) — separado
+// del CRUD de geometrías (SIG.Geometry): cargar los datos del
+// registro no depende de haberlo ubicado en el mapa todavía.
+// Los campos del formulario salen del esquema de
+// CONFIGURACION_COLUMNAS (igual que tabla/filtros/gráficas) —
+// por ahora solo funciona en unidades ya configuradas.
+//--------------------------------------------------
+
+SIG.Record = (()=>{
+
+    //--------------------------------------------------
+    // Campos editables: todo el esquema salvo la clave primaria
+    // y los FK internos que maneja el sistema aparte (geometría,
+    // documentos) — esos no se tipean a mano.
+    //--------------------------------------------------
+
+    function getEditableFields(schema){
+
+        return schema
+
+            .filter(campo =>
+
+                campo.rol !== "PK" &&
+                campo.columna !== "SIG_GEOMETRIAS_ID" &&
+                campo.columna !== "DOCUMENTOS_ID"
+
+            )
+
+            .sort((a,b) => a.orden - b.orden);
+
+    }
+
+    //--------------------------------------------------
+    // Id de campo, a partir del nombre real de columna — pero
+    // saneado. Columnas reales como "EJECUCION_FISICA (%)" tienen
+    // espacio y paréntesis, que rompen un selector CSS
+    // ("#campo_EJECUCION_FISICA (%)" no es válido) y hacían
+    // reventar el formulario entero a mitad de camino. Reemplazar
+    // los caracteres no válidos por "_" alcanza — no hace falta
+    // que el id sea "bonito", solo que exista y sea único.
+    //--------------------------------------------------
+
+    function campoId(columna){
+
+        return "campo_" + String(columna).replace(/[^a-zA-Z0-9_-]/g, "_");
+
+    }
+
+    //--------------------------------------------------
+    // Tipo de control según el TIPO del esquema
+    //--------------------------------------------------
+
+    function inputTypeFor(campo){
+
+        if(campo.tipo === "NUM" || campo.tipo === "DEC"){
+
+            return "number";
+
+        }
+
+        if(campo.tipo === "FECHA"){
+
+            return "date";
+
+        }
+
+        return "text";
+
+    }
+
+    //--------------------------------------------------
+    // Valor de un input[type=date] a partir de lo que venga del
+    // backend (Date, string ISO, o un texto sucio tipeado a mano
+    // fuera del flujo de la app, ej. "04//07/2018"). Un
+    // input[type=date] SOLO acepta "YYYY-MM-DD" — cualquier otra
+    // cosa que se le asigne queda vacío ("") en silencio, y esa
+    // celda se vacía al guardar sin que nadie lo note. Acá se
+    // convierte a mano y, si no se puede, se deja vacío a
+    // propósito (visible, el usuario puede retipearla) — pero
+    // ver readValues: un campo FECHA vacío no se manda al guardar,
+    // así que no pisa el dato sucio original.
+    //--------------------------------------------------
+
+    function toDateInputValue(valor){
+
+        if(!valor){
+
+            return "";
+
+        }
+
+        const fecha = valor instanceof Date ? valor : new Date(valor);
+
+        if(isNaN(fecha.getTime())){
+
+            return "";
+
+        }
+
+        const yyyy = fecha.getFullYear();
+
+        const mm = String(fecha.getMonth() + 1).padStart(2, "0");
+
+        const dd = String(fecha.getDate()).padStart(2, "0");
+
+        return yyyy + "-" + mm + "-" + dd;
+
+    }
+
+    //--------------------------------------------------
+    // Armar un campo del formulario. TEXTO usa <textarea> (no
+    // <input>) — un <input> no puede contener saltos de línea, y
+    // un texto multilínea existente (OBSERVACIONES, por ejemplo)
+    // los pierde en el primer guardado porque el navegador los
+    // descarta al escribir el value.
+    //--------------------------------------------------
+
+    function buildField(campo){
+
+        const col = document.createElement("div");
+
+        col.className = "col-md-4 mb-3";
+
+        const label = document.createElement("label");
+
+        label.className = "form-label";
+
+        label.textContent = campo.etiqueta || campo.columna;
+
+        const id = campoId(campo.columna);
+
+        let control;
+
+        if(campo.tipo === "TEXTO"){
+
+            control = document.createElement("textarea");
+
+            control.rows = 2;
+
+        }
+        else{
+
+            control = document.createElement("input");
+
+            control.type = inputTypeFor(campo);
+
+            if(campo.tipo === "DEC"){
+
+                control.step = "any";
+
+            }
+
+        }
+
+        control.id = id;
+
+        control.className = "form-control";
+
+        col.appendChild(label);
+
+        col.appendChild(control);
+
+        return col;
+
+    }
+
+    //--------------------------------------------------
+    // Dibujar el formulario para una unidad (esquema pedido al
+    // backend) y precargarlo si ya hay un registro (modo editar).
+    // Deshabilita "Guardar" mientras carga — evita que se pueda
+    // guardar antes de que los campos existan.
+    //--------------------------------------------------
+
+    async function render(form, hoja, registro){
+
+        const container = form.querySelector("#record-fields");
+
+        const btnGuardar = form.querySelector("#btn-modal-save");
+
+        if(btnGuardar){
+
+            btnGuardar.disabled = true;
+
+        }
+
+        container.innerHTML =
+
+            '<div class="text-muted small">Cargando campos...</div>';
+
+        let campos;
+
+        try{
+
+            const schema = await SIG.Utils.run(
+
+                "SIG_UD_getSchema",
+                hoja
+
+            );
+
+            campos = getEditableFields(schema);
+
+        }
+        catch(error){
+
+            console.error("[SIG.Record] error al pedir el esquema:", error);
+
+            container.innerHTML =
+
+                '<div class="text-danger small">No se pudo cargar el formulario: ' +
+                SIG.Utils.escapeHtml(error.message) +
+                '</div>';
+
+            return [];
+
+        }
+
+        container.innerHTML = "";
+
+        // Aparte, en su propio try/finally: si algo inesperado
+        // revienta acá (no debería, con campoId ya saneado), que
+        // el botón se reactive igual — antes esta parte quedaba
+        // afuera del try de arriba, y un error dejaba "Guardar"
+        // deshabilitado para siempre, sin ningún aviso visible.
+
+        try{
+
+            campos.forEach(campo=>{
+
+                container.appendChild(buildField(campo));
+
+            });
+
+            if(registro){
+
+                campos.forEach(campo=>{
+
+                    const valor = registro[campo.columna];
+
+                    SIG.Form.set(
+
+                        form,
+                        campoId(campo.columna),
+                        campo.tipo === "FECHA"
+                            ? toDateInputValue(valor)
+                            : (valor ?? "")
+
+                    );
+
+                });
+
+            }
+
+        }
+        catch(error){
+
+            console.error("[SIG.Record] error al armar/precargar el formulario:", error);
+
+            SIG.Loading.error(
+
+                "El formulario no se terminó de armar: " + error.message
+
+            );
+
+        }
+        finally{
+
+            if(btnGuardar){
+
+                btnGuardar.disabled = false;
+
+            }
+
+        }
+
+        return campos;
+
+    }
+
+    //--------------------------------------------------
+    // Leer los valores tipeados, según los campos que se armaron.
+    // Un campo FECHA vacío no se manda: puede ser que el usuario
+    // lo dejó en blanco a propósito (alta nueva), o que la fecha
+    // original no se pudo interpretar (toDateInputValue) — en
+    // ambos casos, no mandar la clave evita pisar un dato
+    // existente con "" en la edición (SIG_saveRow no toca lo que
+    // no viene en el objeto).
+    //--------------------------------------------------
+
+    function readValues(form, campos, idExistente){
+
+        const datos = {};
+
+        if(idExistente){
+
+            datos.ID = idExistente;
+
+        }
+
+        campos.forEach(campo=>{
+
+            const valor = SIG.Form.get(form, campoId(campo.columna));
+
+            if(campo.tipo === "FECHA" && !valor){
+
+                return;
+
+            }
+
+            datos[campo.columna] = valor;
+
+        });
+
+        return datos;
+
+    }
+
+    //--------------------------------------------------
+    // Guardar (crear o actualizar según idExistente)
+    //--------------------------------------------------
+
+    async function save(form, hoja, campos, idExistente){
+
+        const datos = readValues(form, campos, idExistente);
+
+        SIG.Loading.show(
+
+            idExistente ? "Guardando registro..." : "Creando registro..."
+
+        );
+
+        try{
+
+            const resultado = await SIG.Utils.run(
+
+                "SIG_UD_saveRow",
+                hoja,
+                datos
+
+            );
+
+            SIG.Loading.hide();
+
+            return resultado;
+
+        }
+        catch(error){
+
+            console.error("[SIG.Record] error al guardar:", error);
+
+            SIG.Loading.error(
+
+                "No se pudo guardar el registro: " + error.message
+
+            );
+
+            throw error;
+
+        }
+
+    }
+
+    //--------------------------------------------------
+    // Punto de entrada: abrir el modal de alta (sin `registro`)
+    // o edición (con `registro`, los datos ya cargados de la fila).
+    //--------------------------------------------------
+
+    function open(hoja, registro, onSaved){
+
+        let campos = [];
+
+        SIG.Modal.open({
+
+            title: registro ? "Editar registro" : "Nuevo registro",
+
+            component: "view-record",
+
+            data: { hoja, registro },
+
+            onOpen: async ()=>{
+
+                const form = document.querySelector("#sig-modal-body");
+
+                campos = await render(form, hoja, registro);
+
+            },
+
+            onSave: ()=>{
+
+                const form = document.querySelector("#sig-modal-body");
+
+                return save(
+
+                    form,
+                    hoja,
+                    campos,
+                    registro ? registro.ID : null
+
+                );
+
+            },
+
+            onSaved
+
+        });
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        open,
+        getEditableFields
+
+    };
+
+})();
+
+console.log("[SIG.Record] módulo cargado");
+
+</script>

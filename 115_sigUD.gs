@@ -117,6 +117,51 @@ function SIG_UD_get(hoja){
 }
 
 //--------------------------------------------------
+// Insertar/actualizar una fila de una hoja UD_. Solo se
+// permite escribir columnas que ya existen en el esquema de
+// CONFIGURACION_COLUMNAS (más "ID") — la libertad de agregar
+// columnas nuevas sin configurar todavía queda para más
+// adelante, por ahora esto evita escribir basura en columnas
+// que no se están mostrando/validando en ningún lado.
+//--------------------------------------------------
+
+function SIG_UD_saveRow(hoja, datos){
+
+    const schema = SIG_UD_getSchema(hoja);
+
+    if(!schema.length){
+
+        throw new Error(
+
+            "La unidad " + hoja + " no tiene columnas configuradas todavía."
+
+        );
+
+    }
+
+    const columnasValidas = schema.map(campo => campo.columna);
+
+    const datosFiltrados = {};
+
+    Object.keys(datos).forEach(clave=>{
+
+        if(clave === "ID" || columnasValidas.indexOf(clave) !== -1){
+
+            datosFiltrados[clave] = datos[clave];
+
+        }
+
+    });
+
+    const resultado = SIG_saveRow(hoja, datosFiltrados);
+
+    SIG_Cache_remove("ud_rows_" + hoja);
+
+    return resultado;
+
+}
+
+//--------------------------------------------------
 // Unidades disponibles: toda hoja UD_* que exista en el
 // spreadsheet, tenga o no filas cargadas o esquema en
 // CONFIGURACION_COLUMNAS todavía — así el ribbon no depende
@@ -182,11 +227,33 @@ function SIG_UD_indiceGeometrias(){
 
             }
 
+            // Una geometría es de un solo registro — si dos filas
+            // (de la misma unidad o de dos distintas) reclaman la
+            // misma geometría, es un dato inconsistente. No lo
+            // resolvemos solos (podría ser data real que hay que
+            // decidir a mano), pero tampoco lo dejamos en silencio.
+
+            if(indice[geometriaId]){
+
+                Logger.log(
+
+                    "Colisión SIG_GEOMETRIAS_ID=" + geometriaId +
+                    ": ya estaba vinculada a " + indice[geometriaId].hoja +
+                    " (ID " + indice[geometriaId].registroId + "), " +
+                    "también la reclama " + unidad.hoja +
+                    " (ID " + row.ID + "). Queda la última encontrada."
+
+                );
+
+            }
+
             indice[geometriaId] = {
 
                 hoja     : unidad.hoja,
 
                 etiqueta : unidad.etiqueta,
+
+                registroId : row.ID,
 
                 campos   : camposMapa.map(campo => ({
 
@@ -205,3 +272,55 @@ function SIG_UD_indiceGeometrias(){
     return indice;
 
 }
+
+//--------------------------------------------------
+// Vincular una geometría a un registro — de forma exclusiva:
+// una geometría es de un solo registro a la vez (confirmado con
+// el usuario, no una limitación técnica). Antes de escribir el
+// vínculo nuevo, desvincula cualquier OTRA fila que hoy la
+// reclame, sin importar en qué unidad esté. También sirve para
+// "Sin vincular" (hoja/registroId vacíos): solo desvincula.
+//--------------------------------------------------
+
+function SIG_UD_vincularGeometria(geometriaId, hoja, registroId){
+
+    const actual = SIG_UD_indiceGeometrias()[geometriaId];
+
+    const esMismoVinculo = actual &&
+
+        actual.hoja === hoja &&
+
+        String(actual.registroId) === String(registroId);
+
+    if(esMismoVinculo){
+
+        return;
+
+    }
+
+    if(actual){
+
+        SIG_UD_saveRow(actual.hoja, {
+
+            ID: actual.registroId,
+
+            SIG_GEOMETRIAS_ID: ""
+
+        });
+
+    }
+
+    if(hoja && registroId){
+
+        SIG_UD_saveRow(hoja, {
+
+            ID: registroId,
+
+            SIG_GEOMETRIAS_ID: geometriaId
+
+        });
+
+    }
+
+}
+

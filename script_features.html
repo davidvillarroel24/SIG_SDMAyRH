@@ -8,22 +8,7 @@ SIG.Features = (()=>{
 
     const features = {};
 
-    //--------------------------------------------------
-    // Evitar HTML/script sueltos en un popup (los valores
-    // vienen de celdas de la hoja, no son de confiar a ciegas)
-    //--------------------------------------------------
-
-    function escapeHtml(texto){
-
-        return String(texto ?? "")
-
-            .replace(/&/g,"&amp;")
-
-            .replace(/</g,"&lt;")
-
-            .replace(/>/g,"&gt;");
-
-    }
+    const escapeHtml = SIG.Utils.escapeHtml;
 
     //--------------------------------------------------
     // Popup: qué registro UD_ es esta geometría (cruce por
@@ -126,6 +111,17 @@ SIG.Features = (()=>{
             layer.bindPopup(popup);
 
         }
+
+        // El ID real (para poder actualizar/eliminar en vez de
+        // crear una nueva al editar) y el registro cruzado (si lo
+        // tiene) viajan pegados al layer — así el modal de edición
+        // los tiene a mano sin tener que rebuscarlos.
+
+        layer.geometriaId = item.id;
+
+        layer.geometriaData = item;
+
+        SIG.Selection.register(layer);
 
         layer.addTo(
 
