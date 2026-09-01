@@ -1,5 +1,5 @@
 <style>
-  #sig-layers-panel{
+  #sig-map-panels{
 
         position:absolute;
 
@@ -10,6 +10,12 @@
         width:300px;
 
         z-index:900;
+
+        display:flex;
+
+        flex-direction:column;
+
+        gap:10px;
 
     }
 
@@ -34,7 +40,33 @@
         border-radius:10px;
 
     }
+
+    #sig-datalayers-body{
+
+        max-height:350px;
+
+        overflow-y:auto;
+
+    }
+
+    .sig-datalayer-filtro{
+
+        margin-bottom:8px;
+
+    }
+
+    .sig-datalayer-filtro label{
+
+        font-size:.75rem;
+
+        color:#6c757d;
+
+        margin-bottom:2px;
+
+    }
 </style>
+<div id="sig-map-panels">
+
 <div id="sig-layers-panel" class="card shadow">
 
     <div class="card-header d-flex align-items-center">
@@ -113,5 +145,40 @@
         </span>
 
     </div>
+
+</div>
+
+<!-- ===================================== -->
+<!-- Datos: filtros de la unidad prendida en el ribbon (pestaña
+     Mapa) — se llena solo, no hay nada que elegir acá salvo los
+     valores de cada filtro. -->
+<!-- ===================================== -->
+
+<div id="sig-datalayers-panel" class="card shadow d-none">
+
+    <div class="card-header d-flex align-items-center">
+
+        <span class="me-auto">
+
+            <i class="bi bi-funnel"></i>
+            Datos
+
+        </span>
+
+        <button
+            id="btn-toggle-datalayers"
+            class="btn btn-sm btn-outline-secondary"
+            title="Mostrar/Ocultar">
+
+            <i class="bi bi-chevron-up"></i>
+
+        </button>
+
+    </div>
+
+    <div id="sig-datalayers-body" class="p-2">
+    </div>
+
+</div>
 
 </div>

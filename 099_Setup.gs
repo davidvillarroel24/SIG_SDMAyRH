@@ -1,7 +1,8 @@
 //--------------------------------------------------
 // Configuración de columnas por hoja (esquema dinámico)
 // Crea/reinicia CONFIGURACION_COLUMNAS con la configuración de
-// las unidades ya definidas (UD_RIEGOS, UD_RESIDUOS_SOLIDOS).
+// las unidades ya definidas (UD_RIEGOS, UD_RESIDUOS_SOLIDOS,
+// UD_FORESTACIONES).
 // Es un script de configuración: ejecutar manualmente desde el
 // editor de Apps Script (seleccionar la función y "Ejecutar"),
 // no se llama desde el frontend. Es idempotente: se puede volver
@@ -101,7 +102,32 @@ function SIG_Setup_ConfiguracionColumnas(){
         ["UD_RESIDUOS_SOLIDOS","SITUACION_ACTUAL","Situación actual","TEXTO","dato","","","","texto",20,false,false,true],
         ["UD_RESIDUOS_SOLIDOS","PROYECTO","Proyecto (detalle)","TEXTO","dato","","","","texto",21,false,false,true],
         ["UD_RESIDUOS_SOLIDOS","SIG_GEOMETRIAS_ID","Geometría","NUM","FK","SIG_GEOMETRIAS","","","HID",998,false,false,false],
-        ["UD_RESIDUOS_SOLIDOS","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false]
+        ["UD_RESIDUOS_SOLIDOS","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false],
+
+        //--------------------------------------------------
+        // Las 13 columnas de UD_FORESTACIONES, reescrita entera
+        // (ver README paso 8) a partir del KML "Areas Forestadas
+        // GENERADO" — COMUNIDAD es el campo identidad (como
+        // NOMBRE_DEL_PROYECTO/BOTADERO); REGION/PROVINCIA salen
+        // del cruce contra el catálogo real (15 de 94 filas
+        // quedaron sin resolver por huecos del propio catálogo,
+        // el usuario los completa a mano); PROPOSITO_ORIGINAL es
+        // el texto crudo sin normalizar, solo para trazabilidad.
+        //--------------------------------------------------
+
+        ["UD_FORESTACIONES","ID","ID","NUM","PK","","","","HID",0,false,false,false],
+        ["UD_FORESTACIONES","COMUNIDAD","Comunidad","TEXTO","dato","","","","texto",1,true,true,true],
+        ["UD_FORESTACIONES","REGION","Región","TEXTO","FK","REGIONES","","","SEL",2,true,true,true],
+        ["UD_FORESTACIONES","PROVINCIA","Provincia","TEXTO","FK","PROVINCIAS","","","SEL",3,true,true,true],
+        ["UD_FORESTACIONES","MUNICIPIO","Municipio","TEXTO","FK","MUNICIPIOS","","","SEL",4,true,true,true],
+        ["UD_FORESTACIONES","PROPOSITO","Propósito","TEXTO","dato","","","PIE","SEL",5,true,true,true],
+        ["UD_FORESTACIONES","CAMPAÑA","Campaña","TEXTO","dato","","","BAR","SEL",6,true,false,true],
+        ["UD_FORESTACIONES","AREA_PLANTADA_HA","Área plantada (ha)","DEC","dato","","SUM","BAR","texto",10,true,false,true],
+        ["UD_FORESTACIONES","PLANTINES","Plantines","NUM","dato","","SUM","BAR","texto",11,true,false,true],
+        ["UD_FORESTACIONES","TIPO_PLANTA","Tipo de planta","TEXTO","dato","","","","texto",12,true,false,true],
+        ["UD_FORESTACIONES","PROPOSITO_ORIGINAL","Propósito (texto original)","TEXTO","dato","","","","texto",20,false,false,true],
+        ["UD_FORESTACIONES","SIG_GEOMETRIAS_ID","Geometría","NUM","FK","SIG_GEOMETRIAS","","","HID",998,false,false,false],
+        ["UD_FORESTACIONES","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false]
 
     ];
 
@@ -129,7 +155,7 @@ function SIG_Setup_ConfiguracionColumnas(){
 
         "CONFIGURACION_COLUMNAS creada con " +
         filas.length +
-        " filas (UD_RIEGOS + UD_RESIDUOS_SOLIDOS). Cache de esquema invalidada para: " +
+        " filas (UD_RIEGOS + UD_RESIDUOS_SOLIDOS + UD_FORESTACIONES). Cache de esquema invalidada para: " +
         hojasTocadas.join(", ")
 
     );
@@ -219,5 +245,34 @@ function SIG_Cache_resetUD_RIEGOS(){
     SIG_Cache_remove("ud_rows_UD_RIEGOS");
 
     Logger.log("Cache de UD_RIEGOS limpiada.");
+
+}
+
+//--------------------------------------------------
+// Igual que la de arriba, pero para TODAS las unidades a la
+// vez — la app solo invalida el caché de filas cuando el
+// guardado pasa por SIG_UD_saveRow; una edición manual directo
+// en Sheets (pegar un CSV, corregir una celda a mano) no la
+// enseña a la app, y hasta 6h después puede seguir sirviendo la
+// foto vieja. Correr esto después de cualquier edición manual.
+//--------------------------------------------------
+
+function SIG_Cache_resetTodasLasUnidades(){
+
+    SIG_UD_listUnidades().forEach(unidad=>{
+
+        SIG_Cache_remove("ud_schema_" + unidad.hoja);
+
+        SIG_Cache_remove("ud_rows_" + unidad.hoja);
+
+    });
+
+    Logger.log(
+
+        "Cache limpiada para: " +
+
+        SIG_UD_listUnidades().map(u => u.hoja).join(", ")
+
+    );
 
 }

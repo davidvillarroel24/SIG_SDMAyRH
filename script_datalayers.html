@@ -1,0 +1,405 @@
+<script>
+
+//--------------------------------------------------
+// Mostrar/ocultar en el mapa las geometrías de cada unidad, y
+// filtrarlas por sus campos VISIBLE_MAPA (los mismos que ya
+// vienen en item.registro.campos, del cruce de SIG_UD_indice
+// Geometrias — no se pide nada nuevo al backend). Un botón chico
+// en el ribbon prende/apaga cada unidad entera; el panel flotante
+// de capas (el que ya existía para Municipios/Provincias/
+// Regiones) suma una sección "Datos" con los filtros de la
+// unidad que esté prendida.
+//--------------------------------------------------
+
+SIG.DataLayers = (()=>{
+
+    // hoja -> { visible, filtros: { etiqueta: valor } }
+
+    const estado = {};
+
+    //--------------------------------------------------
+    // Colapsar/expandir el cuerpo del panel — mismo patrón que
+    // ya usa el panel de Capas (btn-toggle-list).
+    //--------------------------------------------------
+
+    function initToggle(){
+
+        const btn = document.getElementById("btn-toggle-datalayers");
+
+        const body = document.getElementById("sig-datalayers-body");
+
+        if(!btn || !body){
+
+            return;
+
+        }
+
+        let colapsado = false;
+
+        btn.onclick = ()=>{
+
+            colapsado = !colapsado;
+
+            body.style.display = colapsado ? "none" : "block";
+
+            btn.querySelector("i").className =
+
+                colapsado ? "bi bi-chevron-down" : "bi bi-chevron-up";
+
+        };
+
+    }
+
+    //--------------------------------------------------
+    // Unidades que tienen al menos una geometría cargada
+    //--------------------------------------------------
+
+    function unidadesCargadas(){
+
+        const vistas = new Map();
+
+        SIG.Features.all().forEach(item=>{
+
+            const registro = item.data.registro;
+
+            if(!registro){
+
+                return;
+
+            }
+
+            if(!vistas.has(registro.hoja)){
+
+                vistas.set(registro.hoja, registro.etiqueta);
+
+            }
+
+        });
+
+        return Array.from(vistas.entries()).map(
+
+            ([hoja, etiqueta]) => ({ hoja, etiqueta })
+
+        );
+
+    }
+
+    //--------------------------------------------------
+    // Estado de una unidad (visible por defecto, sin filtros)
+    //--------------------------------------------------
+
+    function getEstado(hoja){
+
+        if(!estado[hoja]){
+
+            estado[hoja] = { visible: true, filtros: {} };
+
+        }
+
+        return estado[hoja];
+
+    }
+
+    //--------------------------------------------------
+    // Campos filtrables de una unidad + sus valores distintos,
+    // a partir de lo que ya viene en cada geometría cargada. Se
+    // salta el primer campo (el de menor ORDEN — la identidad
+    // del registro, ej. NOMBRE_DEL_PROYECTO/COMUNIDAD/BOTADERO):
+    // filtrar por ahí no sirve, tiene casi tantos valores como
+    // filas.
+    //--------------------------------------------------
+
+    function getFiltrosDisponibles(hoja){
+
+        const valores = new Map();
+
+        let primero = null;
+
+        SIG.Features.all().forEach(item=>{
+
+            const registro = item.data.registro;
+
+            if(!registro || registro.hoja !== hoja){
+
+                return;
+
+            }
+
+            registro.campos.forEach((campo, indice)=>{
+
+                if(indice === 0){
+
+                    primero = primero ?? campo.etiqueta;
+
+                    return;
+
+                }
+
+                if(campo.valor === null || campo.valor === undefined || campo.valor === ""){
+
+                    return;
+
+                }
+
+                if(!valores.has(campo.etiqueta)){
+
+                    valores.set(campo.etiqueta, new Set());
+
+                }
+
+                valores.get(campo.etiqueta).add(campo.valor);
+
+            });
+
+        });
+
+        return Array.from(valores.entries()).map(([etiqueta, set])=>({
+
+            etiqueta,
+
+            valores: Array.from(set).sort(
+
+                (a,b) => String(a).localeCompare(String(b), "es")
+
+            )
+
+        }));
+
+    }
+
+    //--------------------------------------------------
+    // ¿Esta geometría pasa los filtros activos de su unidad?
+    //--------------------------------------------------
+
+    function cumpleFiltros(registro, filtros){
+
+        return Object.entries(filtros).every(([etiqueta, valor])=>{
+
+            const campo = registro.campos.find(c => c.etiqueta === etiqueta);
+
+            return campo && String(campo.valor) === String(valor);
+
+        });
+
+    }
+
+    //--------------------------------------------------
+    // Recalcular qué geometrías de una unidad se ven, según su
+    // toggle general + sus filtros activos.
+    //--------------------------------------------------
+
+    function aplicar(hoja){
+
+        const { visible, filtros } = getEstado(hoja);
+
+        const map = SIG.Map.get();
+
+        SIG.Features.all().forEach(item=>{
+
+            const registro = item.data.registro;
+
+            if(!registro || registro.hoja !== hoja){
+
+                return;
+
+            }
+
+            const debeVerse = visible && cumpleFiltros(registro, filtros);
+
+            const yaEstaEnElMapa = map.hasLayer(item.leaflet);
+
+            if(debeVerse && !yaEstaEnElMapa){
+
+                item.leaflet.addTo(map);
+
+            }
+            else if(!debeVerse && yaEstaEnElMapa){
+
+                map.removeLayer(item.leaflet);
+
+            }
+
+        });
+
+    }
+
+    //--------------------------------------------------
+    // Prender/apagar una unidad entera
+    //--------------------------------------------------
+
+    function toggleUnidad(hoja){
+
+        const e = getEstado(hoja);
+
+        e.visible = !e.visible;
+
+        aplicar(hoja);
+
+        renderPanel();
+
+        return e.visible;
+
+    }
+
+    //--------------------------------------------------
+    // Elegir/limpiar un valor de filtro para un campo de una unidad
+    //--------------------------------------------------
+
+    function setFiltro(hoja, etiqueta, valor){
+
+        const e = getEstado(hoja);
+
+        if(valor){
+
+            e.filtros[etiqueta] = valor;
+
+        }
+        else{
+
+            delete e.filtros[etiqueta];
+
+        }
+
+        aplicar(hoja);
+
+    }
+
+    //--------------------------------------------------
+    // Armar un <select> de filtro para un campo de una unidad
+    //--------------------------------------------------
+
+    function buildFiltroSelect(hoja, campo){
+
+        const wrap = document.createElement("div");
+
+        wrap.className = "sig-datalayer-filtro";
+
+        const label = document.createElement("label");
+
+        label.className = "form-label d-block";
+
+        label.textContent = campo.etiqueta;
+
+        const select = document.createElement("select");
+
+        select.className = "form-select form-select-sm";
+
+        const optionTodos = document.createElement("option");
+
+        optionTodos.value = "";
+
+        optionTodos.textContent = "Todos";
+
+        select.appendChild(optionTodos);
+
+        campo.valores.forEach(valor=>{
+
+            const opt = document.createElement("option");
+
+            opt.value = valor;
+
+            opt.textContent = valor;
+
+            select.appendChild(opt);
+
+        });
+
+        select.value = getEstado(hoja).filtros[campo.etiqueta] || "";
+
+        select.onchange = ()=> setFiltro(hoja, campo.etiqueta, select.value);
+
+        wrap.appendChild(label);
+
+        wrap.appendChild(select);
+
+        return wrap;
+
+    }
+
+    //--------------------------------------------------
+    // Redibujar el panel "Datos" — una sección por cada unidad
+    // prendida que tenga filtros disponibles. Si no hay ninguna
+    // unidad prendida con filtros, el panel entero se oculta —
+    // no tiene sentido mostrar un panel vacío.
+    //--------------------------------------------------
+
+    function renderPanel(){
+
+        const panel = document.getElementById("sig-datalayers-panel");
+
+        const body = document.getElementById("sig-datalayers-body");
+
+        if(!panel || !body){
+
+            return;
+
+        }
+
+        body.innerHTML = "";
+
+        const unidadesConFiltros = unidadesCargadas().filter(u=>
+
+            getEstado(u.hoja).visible &&
+            getFiltrosDisponibles(u.hoja).length > 0
+
+        );
+
+        if(!unidadesConFiltros.length){
+
+            panel.classList.add("d-none");
+
+            return;
+
+        }
+
+        panel.classList.remove("d-none");
+
+        unidadesConFiltros.forEach(u=>{
+
+            const titulo = document.createElement("div");
+
+            titulo.className = "fw-bold small mb-1";
+
+            titulo.textContent = u.etiqueta;
+
+            body.appendChild(titulo);
+
+            getFiltrosDisponibles(u.hoja).forEach(campo=>{
+
+                body.appendChild(
+
+                    buildFiltroSelect(u.hoja, campo)
+
+                );
+
+            });
+
+        });
+
+    }
+
+    //--------------------------------------------------
+
+    return{
+
+        unidadesCargadas,
+        getEstado,
+        getFiltrosDisponibles,
+        toggleUnidad,
+        setFiltro,
+        renderPanel,
+        initToggle
+
+    };
+
+})();
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    SIG.DataLayers.initToggle();
+
+});
+
+console.log("[SIG.DataLayers] módulo cargado");
+
+</script>

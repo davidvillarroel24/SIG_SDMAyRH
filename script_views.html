@@ -17,6 +17,17 @@ SIG.Views = (()=>{
 
     ];
 
+    // Elementos que no son una vista en sí (no están arriba) pero
+    // deben mostrarse/ocultarse junto con una vista puntual — el
+    // panel flotante de capas/datos no tiene sentido visible
+    // encima de la tabla o el resumen.
+
+    const dependientes = {
+
+        map: ["sig-map-panels"]
+
+    };
+
     function show(id){
 
         console.log("[SIG.Views] show:", id);
@@ -47,6 +58,30 @@ SIG.Views = (()=>{
             el.style.display =
 
                 viewId === id ? "block" : "none";
+
+        });
+
+        Object.entries(dependientes).forEach(([viewId, elementos])=>{
+
+            elementos.forEach(elId=>{
+
+                const el = document.getElementById(elId);
+
+                if(!el){
+
+                    return;
+
+                }
+
+                // Acá sí alcanza con "" — #sig-map-panels no tiene
+                // ningún display:none en su propia hoja de estilos
+                // que haga falta pisar, su CSS por defecto ya es flex.
+
+                el.style.display =
+
+                    viewId === id ? "" : "none";
+
+            });
 
         });
 

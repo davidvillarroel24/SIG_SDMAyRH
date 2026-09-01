@@ -236,6 +236,18 @@ SIG.Features = (()=>{
     }
 
     //--------------------------------------------------
+    // Todas las geometrías cargadas — hace falta para poder
+    // recorrerlas todas y mostrar/ocultar por unidad (capas de
+    // datos del ribbon).
+    //--------------------------------------------------
+
+    function all(){
+
+        return Object.values(features);
+
+    }
+
+    //--------------------------------------------------
 
     return{
 
@@ -245,7 +257,8 @@ SIG.Features = (()=>{
         exists,
         remove,
         clear,
-        stats
+        stats,
+        all
 
     };
 

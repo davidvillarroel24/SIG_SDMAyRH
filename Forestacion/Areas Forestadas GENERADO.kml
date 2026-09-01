@@ -1,0 +1,966 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>AREAS FORESTADAS (generado)</name>
+  <Style id="s_comercial_pt">
+    <IconStyle><color>ff2e7d32</color><scale>1.0</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon>
+    </IconStyle>
+    <LabelStyle><scale>0.8</scale></LabelStyle>
+  </Style>
+  <Style id="s_comercial_pg">
+    <LineStyle><color>ff2e7d32</color><width>2</width></LineStyle>
+    <PolyStyle><color>802e7d32</color></PolyStyle>
+  </Style>
+  <Style id="s_proteccionyrestauraciond_pt">
+    <IconStyle><color>ffc06515</color><scale>1.0</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon>
+    </IconStyle>
+    <LabelStyle><scale>0.8</scale></LabelStyle>
+  </Style>
+  <Style id="s_proteccionyrestauraciond_pg">
+    <LineStyle><color>ffc06515</color><width>2</width></LineStyle>
+    <PolyStyle><color>80c06515</color></PolyStyle>
+  </Style>
+  <Style id="s_restauracion_pt">
+    <IconStyle><color>ff7b8900</color><scale>1.0</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon>
+    </IconStyle>
+    <LabelStyle><scale>0.8</scale></LabelStyle>
+  </Style>
+  <Style id="s_restauracion_pg">
+    <LineStyle><color>ff7b8900</color><width>2</width></LineStyle>
+    <PolyStyle><color>807b8900</color></PolyStyle>
+  </Style>
+  <Style id="s_sistemasagroforestales_pt">
+    <IconStyle><color>ff006cef</color><scale>1.0</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon>
+    </IconStyle>
+    <LabelStyle><scale>0.8</scale></LabelStyle>
+  </Style>
+  <Style id="s_sistemasagroforestales_pg">
+    <LineStyle><color>ff006cef</color><width>2</width></LineStyle>
+    <PolyStyle><color>80006cef</color></PolyStyle>
+  </Style>
+  <Style id="s_mixtocomercialproteccion_pt">
+    <IconStyle><color>ff9a1b6a</color><scale>1.0</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon>
+    </IconStyle>
+    <LabelStyle><scale>0.8</scale></LabelStyle>
+  </Style>
+  <Style id="s_mixtocomercialproteccion_pg">
+    <LineStyle><color>ff9a1b6a</color><width>2</width></LineStyle>
+    <PolyStyle><color>809a1b6a</color></PolyStyle>
+  </Style>
+  <Style id="s_sinclasificar_pt">
+    <IconStyle><color>ff757575</color><scale>1.0</scale>
+      <Icon><href>http://maps.google.com/mapfiles/kml/paddle/wht-blank.png</href></Icon>
+    </IconStyle>
+    <LabelStyle><scale>0.8</scale></LabelStyle>
+  </Style>
+  <Style id="s_sinclasificar_pg">
+    <LineStyle><color>ff757575</color><width>2</width></LineStyle>
+    <PolyStyle><color>80757575</color></PolyStyle>
+  </Style>
+  <Folder>
+    <name>COMERCIAL (41)</name>
+    <Placemark>
+      <name>ALALAY - PAJCHA 01 - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.44 ha
+Plantines: 3500
+Tipo de planta: Pinus radiata
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2025-2026]]></description>
+      <Point><coordinates>-65.61093360,-17.72694681,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - AGUADA B - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.5 ha
+Plantines: 3500
+Tipo de planta: PINO RADIATA / PINO CIPRES / JARKA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2026]]></description>
+      <Point><coordinates>-65.70394860,-17.84987120,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - AGUADA B - COMERCIAL (2)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.5 ha
+Plantines: 3500
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.70340035,-17.83745654,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - AGUADA B - COMERCIAL (3)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3 ha
+Plantines: 3000
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.69780927,-17.87816910,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - CUEVAS PAMPA - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1 ha
+Plantines: 1000
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.67923066,-17.82321745,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - SIVINGANI ALTO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 2 ha
+Plantines: 2000
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.67181265,-17.90999037,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - SIVINGANI ALTO - COMERCIAL (2)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 2 ha
+Plantines: 2000
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.66958925,-17.92402754,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - MULLU KUCHU - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1 ha
+Plantines: 1000
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.66315383,-17.91824585,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SAN BENITO - TUTI SAN ISIDRO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.52 ha
+Plantines: 5000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2023]]></description>
+      <Point><coordinates>-65.87569950,-17.47562180,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SAN BENITO - TUTI ALTO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.3 ha
+Plantines: 10000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2024]]></description>
+      <Point><coordinates>-65.85652861,-17.44697576,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SAN BENITO - PAJCHA PUJRO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.37 ha
+Plantines: 5000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2024]]></description>
+      <Point><coordinates>-65.91824018,-17.46698323,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SAN BENITO - TUTI SAN ISIDRO - COMERCIAL (2)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 5 ha
+Plantines: 5000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2025]]></description>
+      <Point><coordinates>-65.87569950,-17.47562180,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SAN BENITO - PAJCHA PUJRO - COMERCIAL (2)</name>
+      <styleUrl>#s_comercial_pg</styleUrl>
+      <description><![CDATA[Area plantada: 7.36 ha
+Plantines: 10000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.91931602,-17.46778008,0 -65.91928420,-17.46755481,0 -65.91902923,-17.46749535,0 -65.91905514,-17.46735050,0 -65.91905111,-17.46709773,0 -65.91906037,-17.46708857,0 -65.91931448,-17.46709386,0 -65.91959666,-17.46708972,0 -65.91989751,-17.46707627,0 -65.92000765,-17.46690309,0 -65.92003543,-17.46687559,0 -65.92005352,-17.46683018,0 -65.92023094,-17.46674631,0 -65.92022125,-17.46672839,0 -65.92044003,-17.46687868,0 -65.92063742,-17.46686675,0 -65.92082323,-17.46671954,0 -65.92090961,-17.46682663,0 -65.92101553,-17.46697857,0 -65.92118685,-17.46710246,0 -65.92124401,-17.46714677,0 -65.92136586,-17.46711789,0 -65.92144082,-17.46709873,0 -65.92158450,-17.46725915,0 -65.92161517,-17.46741220,0 -65.92177579,-17.46745498,0 -65.92188070,-17.46754374,0 -65.92195724,-17.46762387,0 -65.92205030,-17.46755930,0 -65.92216969,-17.46737696,0 -65.92224292,-17.46724947,0 -65.92208014,-17.46707127,0 -65.92202312,-17.46703599,0 -65.92214353,-17.46691684,0 -65.92214065,-17.46673629,0 -65.92204039,-17.46634950,0 -65.92186009,-17.46625283,0 -65.92165158,-17.46615657,0 -65.92147128,-17.46605990,0 -65.92130907,-17.46591781,0 -65.92119418,-17.46579309,0 -65.92100390,-17.46566044,0 -65.92076458,-17.46540211,0 -65.92060295,-17.46529613,0 -65.92038460,-17.46517293,0 -65.92021399,-17.46509417,0 -65.92006811,-17.46538525,0 -65.91994698,-17.46545927,0 -65.91972066,-17.46542648,0 -65.91962847,-17.46554521,0 -65.91958231,-17.46560007,0 -65.91965261,-17.46587895,0 -65.91975061,-17.46553439,0 -65.91944031,-17.46613489,0 -65.91936607,-17.46619919,0 -65.91920617,-17.46620154,0 -65.91915827,-17.46614806,0 -65.91902716,-17.46618611,0 -65.91898013,-17.46618680,0 -65.91885325,-17.46589972,0 -65.91883372,-17.46585486,0 -65.91855298,-17.46594928,0 -65.91856546,-17.46555180,0 -65.91850945,-17.46557971,0 -65.91834231,-17.46571761,0 -65.91828064,-17.46598037,0 -65.91821767,-17.46616188,0 -65.91806991,-17.46633561,0 -65.91800896,-17.46664351,0 -65.91784892,-17.46663683,0 -65.91775802,-17.46683681,0 -65.91788045,-17.46684404,0 -65.91767826,-17.46714498,0 -65.91762298,-17.46721803,0 -65.91776594,-17.46733331,0 -65.91776594,-17.46733331,0 -65.91791787,-17.46742138,0 -65.91820279,-17.46758875,0 -65.91868783,-17.46791572,0 -65.91883050,-17.46801295,0 -65.91933104,-17.46813201,0 -65.91931602,-17.46778008,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - MOROCHATA - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 5.11 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2025-2026]]></description>
+      <Point><coordinates>-65.87088798,-17.85866513,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - MOROCHATA - COMERCIAL (2)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.92 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.86914805,-17.86070433,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - MOROCHATA - COMERCIAL (3)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.56 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.87152807,-17.85852125,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - SIVINGANI - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1.31 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.99312974,-17.82483779,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - SIVINGANI - COMERCIAL (2)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.15 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.99222187,-17.82353351,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - SIVINGANI - COMERCIAL (3)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.1 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.99080934,-17.82361835,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - SIVINGANI - COMERCIAL (4)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.45 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.99063767,-17.82406339,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - TOLAHARA - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 14.59 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.98858755,-17.86498591,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - PAJCHAPATA LUX - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 14 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.94150266,-17.72020775,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - PAJCHAPATA LUX - COMERCIAL (2)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.94039133,-17.71272118,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - PAJCHAPATA LUX - COMERCIAL (3)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 6.67 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.95381944,-17.70200075,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - PAMPA CHURIGUA - COMERCIAL [pto 1]</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.9 ha
+Plantines: 1000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2025]]></description>
+      <Point><coordinates>-66.14648097,-17.60901733,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - PAMPA CHURIGUA - COMERCIAL [pto 2]</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.9 ha
+Plantines: 1000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2025]]></description>
+      <Point><coordinates>-66.14576756,-17.60817049,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - RANCHO NUEVO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pg</styleUrl>
+      <description><![CDATA[Area plantada: 0.72 ha
+Plantines: 800
+Tipo de planta: TARA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-66.14765272,-17.53431407,0 -66.20109278,-17.53518113,0 -65.35371004,-18.30167297,0 -65.39064996,-18.26098104,0 -65.53284204,-18.22978601,0 -65.32339302,-18.20568500,0 -65.35901203,-18.13286601,0 -65.38256101,-18.18876103,0 -65.38153295,-18.19513801,0 -66.14765272,-17.53431407,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>INDEPENDENCIA - VILLA HERMOSA - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 2.5 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-66.80758729,-17.38046730,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>INDEPENDENCIA - GHOCHIPAMPA - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 2.5 ha
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-66.88934709,-17.02630593,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TOTORA - RAQAYPAMPA - COMERCIAL</name>
+      <styleUrl>#s_comercial_pg</styleUrl>
+      <description><![CDATA[Area plantada: 4.62 ha
+Plantines: 4000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2025-2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.10983168,-17.68410026,0 -65.11088326,-17.68157611,0 -65.11850383,-17.69651017,0 -65.12192833,-17.68866854,0 -65.11147661,-17.68285147,0 -65.11245255,-17.68304154,0 -65.11229181,-17.68381901,0 -65.11519387,-17.68037645,0 -65.12041444,-17.67871430,0 -65.11076829,-17.68469169,0 -65.11475667,-17.69019167,0 -65.12385500,-17.68372330,0 -65.11978498,-17.68672995,0 -65.12118670,-17.69381996,0 -65.12717000,-17.68723334,0 -65.10983168,-17.68410026,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - MISCAMAYU- 2 DE AGOSTO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 12.8 ha
+Plantines: 10000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL
+Campana: 2025-2026]]></description>
+      <Point><coordinates>-65.47594981,-17.54658828,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - PAIRUMANI BAJO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 2.3 ha
+Plantines: 3000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.47673982,-17.47021002,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - SANKAYANI - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 11.5 ha
+Plantines: 7000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.64892666,-17.36357352,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - SANKAYANI - COMERCIAL (2)</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 12.6 ha
+Plantines: 8000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.64574584,-17.36585551,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - SANKAYANI ALTO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 6.63 ha
+Plantines: 10000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.63148032,-17.38655454,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - BOQUERON ALTO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 7.65 ha
+Plantines: 10000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.60216838,-17.44247680,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - PALCA - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 11.3 ha
+Plantines: 10000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.48671158,-17.53380691,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - PALCA B - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 11.1 ha
+Plantines: 12000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.47608265,-17.53039638,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - TOLA PAMPA BAJO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 5.35 ha
+Plantines: 10000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.43258194,-17.49039512,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - BOQUERON -1RO DE MARZO - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 8 ha
+Plantines: 13000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.59652900,-17.48564631,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - MISKA MAYU - COMERCIAL</name>
+      <styleUrl>#s_comercial_pt</styleUrl>
+      <description><![CDATA[Area plantada: 8.1 ha
+Plantines: 5000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): COMERCIAL
+Proposito (original): COMERCIAL]]></description>
+      <Point><coordinates>-65.47089474,-17.54845163,0</coordinates></Point>
+    </Placemark>
+  </Folder>
+  <Folder>
+    <name>SIN CLASIFICAR (29)</name>
+    <Placemark>
+      <name>ALALAY - RUMI CORRAL - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.1 ha
+Plantines: 3000
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.62813997,-17.80942114,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - MURU KULLO - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 9 ha
+Plantines: 9500
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.68302267,-17.80836775,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - ALALAY 02 (KHATA) - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.1 ha
+Plantines: 3350
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.69835183,-17.75929695,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - ALALAY 01 (KHATA) - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1.85 ha
+Plantines: 2200
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.69678240,-17.75963637,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - PAJCHA 02 - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.98 ha
+Plantines: 1150
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.60685933,-17.73653523,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - PUNKILLO 01 - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 4.15 ha
+Plantines: 3800
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.59086431,-17.82530780,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - PUNKILLO 02 - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 2 ha
+Plantines: 2100
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.58939882,-17.82561262,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - YANAGAGA - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 2 ha
+Plantines: 2500
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.60615257,-17.85471312,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - ALALAY 03 - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 2.36 ha
+Plantines: 2500
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.69602400,-17.72361684,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - MUYURINA 01 - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.86 ha
+Plantines: 1000
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.54055310,-17.78584724,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ALALAY - MUYURINA 02 - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 4.5 ha
+Plantines: 7000
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.54432765,-17.80443725,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILLA G. VILLARROÉL - SAYANI - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pg</styleUrl>
+      <description><![CDATA[Area plantada: 2.44 ha
+Plantines: 10000
+Proposito (normalizado): SIN CLASIFICAR
+Campana: 2025-2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.74090333,-17.72226318,0 -65.73944330,-17.72291570,0 -65.73892343,-17.72156839,0 -65.74004691,-17.72109215,0 -65.74090333,-17.72226318,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>VILLA G. VILLARROÉL - CONVENTO PAMPA - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pg</styleUrl>
+      <description><![CDATA[Area plantada: 1.4 ha
+Plantines: 5000
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.73517990,-17.67849108,0 -65.73416258,-17.67911930,0 -65.73255993,-17.67841914,0 -65.73376235,-17.67757162,0 -65.73517990,-17.67849108,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>VILLA G. VILLARROÉL - URA YANA RUMI - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pg</styleUrl>
+      <description><![CDATA[Area plantada: 1.1 ha
+Plantines: 5000
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.76418740,-17.71493814,0 -65.76243582,-17.71438485,0 -65.76195750,-17.71329892,0 -65.76325581,-17.71317229,0 -65.76418740,-17.71493814,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>VILLA G. VILLARROÉL - VILLA VICTORIA (FASE I) - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pg</styleUrl>
+      <description><![CDATA[Area plantada: 1.5 ha
+Plantines: 6000
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.74575570,-17.70553427,0 -65.74560210,-17.70534678,0 -65.74647182,-17.70491923,0 -65.74725765,-17.70517012,0 -65.74575570,-17.70553427,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>AIQUILE - THOLA MAYU - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pg</styleUrl>
+      <description><![CDATA[Area plantada: 2.47 ha
+Proposito (normalizado): SIN CLASIFICAR
+Campana: 2025-2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-64.99020515,-18.30859663,0 -64.98952108,-18.30915483,0 -64.98920140,-18.30932077,0 -64.98894151,-18.30892599,0 -64.98868071,-18.30844991,0 -64.98833324,-18.30783922,0 -64.98835081,-18.30772159,0 -64.98846839,-18.30725060,0 -64.98885334,-18.30700267,0 -64.98938204,-18.30774698,0 -64.98963288,-18.30817800,0 -64.98988760,-18.30812114,0 -64.99020515,-18.30859663,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>AIQUILE - THOLA MAYU - SIN CLASIFICAR (2)</name>
+      <styleUrl>#s_sinclasificar_pg</styleUrl>
+      <description><![CDATA[Area plantada: 0.83 ha
+Proposito (normalizado): SIN CLASIFICAR
+Campana: 2025-2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-64.98911752,-18.30943005,0 -64.98917172,-18.31003476,0 -64.98917585,-18.31039608,0 -64.98861860,-18.31046512,0 -64.98859023,-18.31046542,0 -64.98829485,-18.30944766,0 -64.98854105,-18.30947220,0 -64.98911752,-18.30943005,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>AIQUILE - THOLA MAYU - SIN CLASIFICAR (3)</name>
+      <styleUrl>#s_sinclasificar_pg</styleUrl>
+      <description><![CDATA[Area plantada: 0.97 ha
+Proposito (normalizado): SIN CLASIFICAR
+Campana: 2025-2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.00317404,-18.28571362,0 -65.00340338,-18.28509691,0 -65.00268288,-18.28494185,0 -65.00221225,-18.28595858,0 -65.00257448,-18.28620773,0 -65.00317404,-18.28571362,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>AIQUILE - PIRHUA PIRHUA - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pg</styleUrl>
+      <description><![CDATA[Area plantada: 3.11 ha
+Proposito (normalizado): SIN CLASIFICAR
+Campana: 2025-2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-64.97954854,-18.33794140,0 -64.98038225,-18.33888130,0 -64.98075946,-18.33794689,0 -64.98091070,-18.33793628,0 -64.89539201,-18.33879678,0 -64.93282870,-18.33819500,0 -64.97965557,-18.33820227,0 -64.97777718,-18.33939619,0 -64.89346939,-18.34033366,0 -64.97882094,-18.33967444,0 -64.97954854,-18.33794140,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - RECARGAS HIDRICAS TIRAQUE - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1.15 ha
+Plantines: 1500
+Tipo de planta: KEWIÑA
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.64589896,-17.39246493,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - RECARGAS HIDRICAS TIRAQUE - SIN CLASIFICAR (2)</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.77 ha
+Plantines: 1000
+Tipo de planta: KEWIÑA
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.64589896,-17.39246493,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>TIRAQUE - LAGUNILLAS - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.38 ha
+Plantines: 500
+Tipo de planta: ALISO
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.65028285,-17.37801190,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>COLOMI - TABLAS MONTE - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1.78 ha
+Plantines: 2000
+Tipo de planta: GUAYABA
+Proposito (normalizado): SIN CLASIFICAR
+Campana: 2025-2026]]></description>
+      <Point><coordinates>-66.00904109,-17.07341548,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>COLOMI - SUB CENTRAL ASERRADERO - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1.78 ha
+Plantines: 2000
+Tipo de planta: PINO PATULA
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.93934267,-17.15971905,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>COLOMI - CHULLUMANI - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 8.01 ha
+Plantines: 9000
+Tipo de planta: PINO PATULA
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.96937654,-17.13859395,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>COLOMI - ALTO CORANI - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.89 ha
+Plantines: 1000
+Tipo de planta: PINO CIPRES
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.91916435,-17.10058574,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>COLOMI - HACHI - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.89 ha
+Plantines: 1000
+Tipo de planta: PINO CIPRES
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.90061939,-17.23334481,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>COLOMI - KICHKA MUQU - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.26 ha
+Plantines: 300
+Tipo de planta: PINO CIPRES
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.94626320,-17.25001749,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>COLOMI - LIRIUNI - SIN CLASIFICAR</name>
+      <styleUrl>#s_sinclasificar_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.56 ha
+Plantines: 4000
+Tipo de planta: PINO PATULA
+Proposito (normalizado): SIN CLASIFICAR]]></description>
+      <Point><coordinates>-65.87706567,-17.33410481,0</coordinates></Point>
+    </Placemark>
+  </Folder>
+  <Folder>
+    <name>PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS (20)</name>
+    <Placemark>
+      <name>VILA VILA - SIVINGANI ALTO - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1 ha
+Plantines: 1000
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN]]></description>
+      <Point><coordinates>-65.67567385,-17.86426906,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - MULLU KUCHU - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1 ha
+Plantines: 1000
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS]]></description>
+      <Point><coordinates>-65.64108319,-17.91915203,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - MULLU KUCHU - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS (2)</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.5 ha
+Plantines: 500
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS]]></description>
+      <Point><coordinates>-65.64642705,-17.90864872,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - MULU FALDA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 1 ha
+Plantines: 1000
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS]]></description>
+      <Point><coordinates>-65.65471321,-17.95382520,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - MULU FALDA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS (2)</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.5 ha
+Plantines: 500
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS]]></description>
+      <Point><coordinates>-65.65048569,-17.95822680,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - CAROMA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.5 ha
+Plantines: 500
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS]]></description>
+      <Point><coordinates>-65.61103608,-17.98979227,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - PILPINA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.6 ha
+Plantines: 600
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS]]></description>
+      <Point><coordinates>-65.58813892,-18.01427585,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - HUAÑOAMA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.9 ha
+Plantines: 900
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS]]></description>
+      <Point><coordinates>-65.58321964,-17.96556425,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>VILA VILA - MOJON - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.5 ha
+Plantines: 500
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS]]></description>
+      <Point><coordinates>-65.64991176,-17.97845078,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SAN BENITO - KEWIÑA LOMA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3 ha
+Plantines: 2000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN
+Campana: 2026]]></description>
+      <Point><coordinates>-65.89258248,-17.47464527,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - SIVINGANI - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.24 ha
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN]]></description>
+      <Point><coordinates>-65.99754481,-17.82392135,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - TOLAHARA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.14 ha
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN]]></description>
+      <Point><coordinates>-65.99169796,-17.85816666,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - TOLAHARA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS (2)</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.1 ha
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN]]></description>
+      <Point><coordinates>-65.99330927,-17.85698625,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>ANZALDO - TOLAHARA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS (3)</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.0348 ha
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN]]></description>
+      <Point><coordinates>-65.99390515,-17.85766328,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - SAUCINI - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS [pto 1]</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.6 ha
+Plantines: 4000
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN
+Campana: 2025]]></description>
+      <Point><coordinates>-66.24466482,-17.52917447,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - SAUCINI - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS [pto 2]</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 3.6 ha
+Plantines: 4000
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN
+Campana: 2025]]></description>
+      <Point><coordinates>-66.25099560,-17.52948131,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - SAUCINI - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS [pto 1] (2)</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.9 ha
+Plantines: 1000
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN
+Campana: 2026]]></description>
+      <Point><coordinates>-66.25416093,-17.53394086,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - SAUCINI - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS [pto 2] (2)</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.9 ha
+Plantines: 1000
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN
+Campana: 2026]]></description>
+      <Point><coordinates>-66.25387923,-17.53117037,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - CARRETERA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS [pto 1]</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.9 ha
+Plantines: 1000
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN
+Campana: 2025]]></description>
+      <Point><coordinates>-66.19681185,-17.53031456,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>SANTIVAÑEZ - CARRETERA - PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS [pto 2]</name>
+      <styleUrl>#s_proteccionyrestauraciond_pt</styleUrl>
+      <description><![CDATA[Area plantada: 0.9 ha
+Plantines: 1000
+Tipo de planta: NATIVO
+Proposito (normalizado): PROTECCION Y RESTAURACION DE FUENTES DE AGUA Y SUELOS
+Proposito (original): PROTECCIÓN
+Campana: 2025]]></description>
+      <Point><coordinates>-66.18727832,-17.52499597,0</coordinates></Point>
+    </Placemark>
+  </Folder>
+  <Folder>
+    <name>MIXTO (COMERCIAL / PROTECCION) (2)</name>
+    <Placemark>
+      <name>POCONA - CHIUCHI - MIXTO (COMERCIAL / PROTECCION)</name>
+      <styleUrl>#s_mixtocomercialproteccion_pt</styleUrl>
+      <description><![CDATA[Area plantada: 15 ha
+Plantines: 15000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): MIXTO (COMERCIAL / PROTECCION)
+Proposito (original): COMERCIAL Y PROTECCIÓN DE EROSIÓN DE SUELO EN PENDIENTES DE LA COMUNIDAD.
+Campana: 2025-2026]]></description>
+      <Point><coordinates>-65.32404519,-17.64606891,0</coordinates></Point>
+    </Placemark>
+    <Placemark>
+      <name>POCONA - QOPI ESQUINA - MIXTO (COMERCIAL / PROTECCION)</name>
+      <styleUrl>#s_mixtocomercialproteccion_pt</styleUrl>
+      <description><![CDATA[Area plantada: 5 ha
+Plantines: 5000
+Tipo de planta: PINO RADIATA
+Proposito (normalizado): MIXTO (COMERCIAL / PROTECCION)
+Proposito (original): PROTECCIÓN DE VIENTOS FUERTES Y COMERCIAL.]]></description>
+      <Point><coordinates>-65.34904997,-17.69639898,0</coordinates></Point>
+    </Placemark>
+  </Folder>
+  <Folder>
+    <name>RESTAURACION (2)</name>
+    <Placemark>
+      <name>TOTORA - HOYADAS - RESTAURACION</name>
+      <styleUrl>#s_restauracion_pg</styleUrl>
+      <description><![CDATA[Area plantada: 1.59 ha
+Plantines: 350
+Tipo de planta: JACARANDA / MOLLE
+Proposito (normalizado): RESTAURACION
+Proposito (original): RESTAURACIÓN
+Campana: 2025-2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.16483502,-17.93670000,0 -65.16747302,-17.93300898,0 -65.17015245,-17.92949678,0 -65.17015272,-17.92797013,0 -65.16613100,-17.92379502,0 -65.15988122,-17.94007195,0 -65.16193966,-17.94559559,0 -65.16394957,-17.94789479,0 -65.14185495,-17.96266543,0 -65.17278195,-17.93654904,0 -65.16443880,-17.92574224,0 -65.17329233,-17.92307236,0 -65.16008480,-17.90635172,0 -65.16117889,-17.87647955,0 -65.16892642,-17.85376217,0 -65.16483502,-17.93670000,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+    <Placemark>
+      <name>TOTORA - ARDILA - RESTAURACION</name>
+      <styleUrl>#s_restauracion_pg</styleUrl>
+      <description><![CDATA[Area plantada: 1.59 ha
+Plantines: 250
+Tipo de planta: JACARANDA
+Proposito (normalizado): RESTAURACION
+Proposito (original): RESTAURACIÓN
+Campana: 2025-2026]]></description>
+      <Polygon><tessellate>1</tessellate><outerBoundaryIs><LinearRing><coordinates>-65.26188147,-17.73965154,0 -65.26424761,-17.73822772,0 -65.26833497,-17.74272603,0 -65.27136693,-17.74793462,0 -65.27505975,-17.75053469,0 -65.27696600,-17.74390345,0 -65.27923415,-17.74208107,0 -65.28244478,-17.74078497,0 -65.28589267,-17.74144668,0 -65.28262886,-17.74729725,0 -65.28854807,-17.74758613,0 -65.29063418,-17.74353885,0 -65.29750581,-17.75241821,0 -65.29791182,-17.75353967,0 -65.30401729,-17.75032284,0 -65.13928219,-17.75306165,0 -65.13179189,-17.74315690,0 -65.13164957,-17.73712191,0 -65.12061192,-17.74044105,0 -65.12105464,-17.73842570,0 -65.13586770,-17.73013478,0 -65.13426080,-17.73206534,0 -65.13172299,-17.72434557,0 -65.13571625,-17.72756768,0 -65.13807380,-17.72914062,0 -65.13808179,-17.72594467,0 -65.13928609,-17.72498292,0 -65.14502045,-17.71157078,0 -65.11204897,-17.72580330,0 -65.11384677,-17.72246536,0 -65.26188147,-17.73965154,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+    </Placemark>
+  </Folder>
+</Document>
+</kml>

@@ -60,6 +60,27 @@ SIG.Ribbon.addButton(
 );
 
 //--------------------------------------------------
+// Grupo "Datos" en la pestaña Mapa: un botón chico por unidad
+// para prender/apagar sus geometrías en el mapa. Los botones se
+// arman más abajo, junto con los de las pestañas Datos/Resumen
+// (misma lista de unidades, un solo pedido al backend).
+//--------------------------------------------------
+
+SIG.Ribbon.addGroup(
+
+    "mapa",
+
+    {
+
+        id:"datos-mapa",
+
+        text:"Datos"
+
+    }
+
+);
+
+//--------------------------------------------------
 // Pestaña Datos
 //--------------------------------------------------
 
@@ -129,6 +150,24 @@ google.script.run
         SIG.Loading.hide();
 
         unidades.forEach(u=>{
+
+            SIG.Ribbon.addButton(
+
+                "mapa",
+
+                "datos-mapa",
+
+                {
+
+                    text: u.etiqueta,
+
+                    icon: "bi bi-eye",
+
+                    click: ()=>SIG.DataLayers.toggleUnidad(u.hoja)
+
+                }
+
+            );
 
             SIG.Ribbon.addButton(
 
