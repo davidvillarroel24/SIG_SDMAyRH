@@ -11,29 +11,25 @@
 
         z-index:900;
 
-        display:flex;
-
-        flex-direction:column;
-
-        gap:10px;
-
     }
 
     #sig-layers-body{
 
-        max-height:350px;
+        max-height:220px;
 
         overflow-y:auto;
 
     }
 
-    #sig-layers-body::-webkit-scrollbar{
+    #sig-layers-body::-webkit-scrollbar,
+    #sig-datalayers-body::-webkit-scrollbar{
 
         width:8px;
 
     }
 
-    #sig-layers-body::-webkit-scrollbar-thumb{
+    #sig-layers-body::-webkit-scrollbar-thumb,
+    #sig-datalayers-body::-webkit-scrollbar-thumb{
 
         background:#c0c0c0;
 
@@ -41,23 +37,49 @@
 
     }
 
+    #sig-datalayers-section{
+
+        border-top:1px solid #dee2e6;
+
+    }
+
+    #sig-datalayers-section .section-title{
+
+        font-size:.7rem;
+
+        text-transform:uppercase;
+
+        color:#6c757d;
+
+        padding:6px 12px 2px;
+
+    }
+
     #sig-datalayers-body{
 
-        max-height:350px;
+        max-height:250px;
 
         overflow-y:auto;
 
     }
 
+    .sig-datalayer-filtros{
+
+        padding:4px 12px 8px 34px;
+
+        background:#f8f9fa;
+
+    }
+
     .sig-datalayer-filtro{
 
-        margin-bottom:8px;
+        margin-bottom:6px;
 
     }
 
     .sig-datalayer-filtro label{
 
-        font-size:.75rem;
+        font-size:.72rem;
 
         color:#6c757d;
 
@@ -75,7 +97,7 @@
 
             <i class="bi bi-layers"></i>
 
-            Capas
+            Capas y datos
 
         </span>
 
@@ -130,53 +152,43 @@
 
     </div>
 
-    <div
-        id="sig-layers-body"
-        class="list-group list-group-flush">
+    <div id="sig-panel-colapsable">
 
-    </div>
+        <div
+            id="sig-layers-body"
+            class="list-group list-group-flush">
 
-    <div class="card-footer text-muted small">
+        </div>
 
-        <span id="sig-layers-count">
+        <div class="card-footer text-muted small">
 
-            0 capas
+            <span id="sig-layers-count">
 
-        </span>
+                0 capas
 
-    </div>
+            </span>
 
-</div>
+        </div>
 
-<!-- ===================================== -->
-<!-- Datos: filtros de la unidad prendida en el ribbon (pestaña
-     Mapa) — se llena solo, no hay nada que elegir acá salvo los
-     valores de cada filtro. -->
-<!-- ===================================== -->
+        <!-- ===================================== -->
+        <!-- Datos: una fila por unidad con geometrías en el mapa
+             (Riego, Residuos Sólidos, Forestación...) — mismo
+             check para prender/apagar que las capas de arriba.
+             "Filtros" despliega los selects de esa unidad puntual,
+             para no apilar todo siempre. -->
+        <!-- ===================================== -->
 
-<div id="sig-datalayers-panel" class="card shadow d-none">
+        <div id="sig-datalayers-section">
 
-    <div class="card-header d-flex align-items-center">
+            <div class="section-title">Datos</div>
 
-        <span class="me-auto">
+            <div
+                id="sig-datalayers-body"
+                class="list-group list-group-flush">
+            </div>
 
-            <i class="bi bi-funnel"></i>
-            Datos
+        </div>
 
-        </span>
-
-        <button
-            id="btn-toggle-datalayers"
-            class="btn btn-sm btn-outline-secondary"
-            title="Mostrar/Ocultar">
-
-            <i class="bi bi-chevron-up"></i>
-
-        </button>
-
-    </div>
-
-    <div id="sig-datalayers-body" class="p-2">
     </div>
 
 </div>

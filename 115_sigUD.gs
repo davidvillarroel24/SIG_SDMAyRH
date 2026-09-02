@@ -87,7 +87,18 @@ function SIG_UD_getRows(hoja){
 
     }
 
-    const rows = SIG_getRows(hoja);
+    // Las filas dadas de baja (ELIMINADO, ver SIG_UD_delete) no
+    // se muestran más — mismo criterio que ya usa
+    // SIG_Geometrias_list para las geometrías. Si la hoja no
+    // tiene columna ELIMINADO todavía, row.ELIMINADO es
+    // undefined y la fila queda (no rompe nada en las unidades
+    // que no la tengan configurada).
+
+    const rows = SIG_getRows(hoja).filter(
+
+        row => !row.ELIMINADO
+
+    );
 
     if(rows.length){
 
@@ -158,6 +169,46 @@ function SIG_UD_saveRow(hoja, datos){
     SIG_Cache_remove("ud_rows_" + hoja);
 
     return resultado;
+
+}
+
+//--------------------------------------------------
+// Baja lógica de un registro (no se borra la fila). Requiere
+// que la unidad tenga columna ELIMINADO en CONFIGURACION_
+// COLUMNAS — SIG_UD_saveRow descarta en silencio cualquier
+// clave que no esté en el esquema (mismo filtro de columnas
+// válidas de siempre), así que sin este chequeo el "borrado"
+// sería un guardado que no toca ninguna columna: no tira error,
+// pero tampoco borra nada. Se valida acá explícito, en vez de
+// dejarlo fallar mudo.
+//--------------------------------------------------
+
+function SIG_UD_delete(hoja, id){
+
+    const schema = SIG_UD_getSchema(hoja);
+
+    const tieneEliminado = schema.some(
+
+        campo => campo.columna === "ELIMINADO"
+
+    );
+
+    if(!tieneEliminado){
+
+        throw new Error(
+
+            "La unidad " + hoja + " no tiene columna ELIMINADO configurada — no se puede eliminar."
+
+        );
+
+    }
+
+    return SIG_UD_saveRow(hoja, {
+
+        ID        : id,
+        ELIMINADO : true
+
+    });
 
 }
 

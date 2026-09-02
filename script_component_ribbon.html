@@ -186,11 +186,31 @@ SIG.Ribbon = (()=>{
                     `<i class="${item.icon}"></i>
                      <div>${item.text}</div>`;
 
+                // Un botón puede declarar isActive() para pintarse
+                // distinto (ej. "esta unidad está prendida en el
+                // mapa") — opcional, la mayoría no lo usa. Se
+                // vuelve a consultar cada vez que el botón se
+                // dibuja, así que sigue correcto aunque se cambie
+                // de pestaña y se vuelva (el botón es un elemento
+                // nuevo cada vez).
+
+                if(item.isActive && item.isActive()){
+
+                    btn.classList.add("active");
+
+                }
+
                 btn.onclick=()=>{
 
                     console.log("[SIG.Ribbon] click botón:", item.text);
 
-                    item.click();
+                    // Se pasa el propio botón para que el click
+                    // pueda darse feedback visual inmediato (sin
+                    // esperar a un refresh()) además de lo que
+                    // isActive() vaya a decir la próxima vez que
+                    // se dibuje.
+
+                    item.click(btn);
 
                 };
 

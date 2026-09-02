@@ -63,12 +63,63 @@ SIG.Utils = (()=>{
     }
 
     //--------------------------------------------------
+    // Confirmación de una acción — reemplaza confirm() nativo
+    // (bloqueante, sin estilo, distinto en cada navegador) por
+    // SweetAlert2. Devuelve una Promise<boolean>: true si el
+    // usuario confirmó, false si canceló o cerró el diálogo.
+    //--------------------------------------------------
+
+    function confirmar({
+
+        titulo,
+        texto = "",
+        confirmarTexto = "Sí",
+        cancelarTexto = "Cancelar",
+        icono = "warning",
+        colorConfirmar = "#dc3545"
+
+    } = {}){
+
+        return Swal.fire({
+
+            title             : titulo,
+            text              : texto,
+            icon              : icono,
+            showCancelButton  : true,
+            confirmButtonText : confirmarTexto,
+            cancelButtonText  : cancelarTexto,
+            confirmButtonColor: colorConfirmar,
+            reverseButtons    : true
+
+        }).then(resultado => resultado.isConfirmed);
+
+    }
+
+    //--------------------------------------------------
+    // Alerta simple (informativa) — reemplaza alert() nativo.
+    //--------------------------------------------------
+
+    function avisar(titulo, texto = "", icono = "info"){
+
+        return Swal.fire({
+
+            title : titulo,
+            text  : texto,
+            icon  : icono
+
+        });
+
+    }
+
+    //--------------------------------------------------
 
     return{
 
         escapeHtml,
         formatNumber,
-        run
+        run,
+        confirmar,
+        avisar
 
     };
 

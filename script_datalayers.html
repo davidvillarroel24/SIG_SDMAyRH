@@ -18,39 +18,6 @@ SIG.DataLayers = (()=>{
     const estado = {};
 
     //--------------------------------------------------
-    // Colapsar/expandir el cuerpo del panel — mismo patrón que
-    // ya usa el panel de Capas (btn-toggle-list).
-    //--------------------------------------------------
-
-    function initToggle(){
-
-        const btn = document.getElementById("btn-toggle-datalayers");
-
-        const body = document.getElementById("sig-datalayers-body");
-
-        if(!btn || !body){
-
-            return;
-
-        }
-
-        let colapsado = false;
-
-        btn.onclick = ()=>{
-
-            colapsado = !colapsado;
-
-            body.style.display = colapsado ? "none" : "block";
-
-            btn.querySelector("i").className =
-
-                colapsado ? "bi bi-chevron-down" : "bi bi-chevron-up";
-
-        };
-
-    }
-
-    //--------------------------------------------------
     // Unidades que tienen al menos una geometría cargada
     //--------------------------------------------------
 
@@ -235,7 +202,14 @@ SIG.DataLayers = (()=>{
 
         aplicar(hoja);
 
-        renderPanel();
+        render();
+
+        // El botón del ribbon se dibuja de nuevo (isActive() se
+        // vuelve a consultar) — sin esto, si el toggle vino del
+        // check de este panel, el botón del ribbon quedaría
+        // mostrando el color viejo hasta que se cambie de pestaña.
+
+        SIG.Ribbon.refresh();
 
         return e.visible;
 
@@ -317,19 +291,100 @@ SIG.DataLayers = (()=>{
     }
 
     //--------------------------------------------------
-    // Redibujar el panel "Datos" — una sección por cada unidad
-    // prendida que tenga filtros disponibles. Si no hay ninguna
-    // unidad prendida con filtros, el panel entero se oculta —
-    // no tiene sentido mostrar un panel vacío.
+    // Una fila por unidad — mismo lenguaje visual que ya usa la
+    // lista de Capas de arriba (check + nombre), en vez de un
+    // bloque de título + selects repetido por unidad. Los
+    // filtros quedan plegados atrás de un botón "embudo", para
+    // no apilar todos los selects de todas las unidades siempre.
     //--------------------------------------------------
 
-    function renderPanel(){
+    function buildRow(unidad){
 
-        const panel = document.getElementById("sig-datalayers-panel");
+        const contenedor = document.createElement("div");
+
+        const fila = document.createElement("div");
+
+        fila.className = "list-group-item d-flex align-items-center";
+
+        const check = document.createElement("input");
+
+        check.type = "checkbox";
+
+        check.className = "form-check-input me-2";
+
+        check.checked = getEstado(unidad.hoja).visible;
+
+        check.onchange = ()=> toggleUnidad(unidad.hoja);
+
+        const nombre = document.createElement("span");
+
+        nombre.className = "flex-grow-1";
+
+        nombre.textContent = unidad.etiqueta;
+
+        const filtros = getFiltrosDisponibles(unidad.hoja);
+
+        const panelFiltros = document.createElement("div");
+
+        panelFiltros.className = "sig-datalayer-filtros d-none";
+
+        filtros.forEach(campo=>{
+
+            panelFiltros.appendChild(
+
+                buildFiltroSelect(unidad.hoja, campo)
+
+            );
+
+        });
+
+        const btnFiltros = document.createElement("button");
+
+        btnFiltros.className = "btn btn-sm btn-outline-secondary";
+
+        btnFiltros.innerHTML = '<i class="bi bi-funnel"></i>';
+
+        if(filtros.length){
+
+            btnFiltros.title = "Filtros";
+
+            btnFiltros.onclick = ()=>
+
+                panelFiltros.classList.toggle("d-none");
+
+        }
+        else{
+
+            btnFiltros.title = "Esta unidad no tiene campos filtrables";
+
+            btnFiltros.disabled = true;
+
+        }
+
+        fila.appendChild(check);
+
+        fila.appendChild(nombre);
+
+        fila.appendChild(btnFiltros);
+
+        contenedor.appendChild(fila);
+
+        contenedor.appendChild(panelFiltros);
+
+        return contenedor;
+
+    }
+
+    //--------------------------------------------------
+    // Redibujar la lista de unidades — una fila por cada una que
+    // tenga al menos una geometría cargada en el mapa.
+    //--------------------------------------------------
+
+    function render(){
 
         const body = document.getElementById("sig-datalayers-body");
 
-        if(!panel || !body){
+        if(!body){
 
             return;
 
@@ -337,42 +392,9 @@ SIG.DataLayers = (()=>{
 
         body.innerHTML = "";
 
-        const unidadesConFiltros = unidadesCargadas().filter(u=>
+        unidadesCargadas().forEach(unidad=>{
 
-            getEstado(u.hoja).visible &&
-            getFiltrosDisponibles(u.hoja).length > 0
-
-        );
-
-        if(!unidadesConFiltros.length){
-
-            panel.classList.add("d-none");
-
-            return;
-
-        }
-
-        panel.classList.remove("d-none");
-
-        unidadesConFiltros.forEach(u=>{
-
-            const titulo = document.createElement("div");
-
-            titulo.className = "fw-bold small mb-1";
-
-            titulo.textContent = u.etiqueta;
-
-            body.appendChild(titulo);
-
-            getFiltrosDisponibles(u.hoja).forEach(campo=>{
-
-                body.appendChild(
-
-                    buildFiltroSelect(u.hoja, campo)
-
-                );
-
-            });
+            body.appendChild(buildRow(unidad));
 
         });
 
@@ -387,18 +409,11 @@ SIG.DataLayers = (()=>{
         getFiltrosDisponibles,
         toggleUnidad,
         setFiltro,
-        renderPanel,
-        initToggle
+        render
 
     };
 
 })();
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-    SIG.DataLayers.initToggle();
-
-});
 
 console.log("[SIG.DataLayers] módulo cargado");
 

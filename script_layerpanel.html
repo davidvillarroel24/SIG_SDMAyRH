@@ -47,10 +47,18 @@ SIG.LayerPanel = (()=>{
         };
 
       //--------------------------------------------------
-      // Mostrar/Ocultar lista
+      // Mostrar/Ocultar todo el bloque colapsable (capas +
+      // datos, ahora un solo bloque — antes eran dos toggles
+      // separados para dos tarjetas separadas).
       //--------------------------------------------------
 
       let collapsed=false;
+
+      const colapsable = document.getElementById(
+
+          "sig-panel-colapsable"
+
+      );
 
       document
 
@@ -64,15 +72,7 @@ SIG.LayerPanel = (()=>{
 
           collapsed=!collapsed;
 
-          body.style.display=
-
-              collapsed
-
-              ?"none"
-
-              :"block";
-
-          count.parentElement.style.display=
+          colapsable.style.display=
 
               collapsed
 

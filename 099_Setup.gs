@@ -77,6 +77,7 @@ function SIG_Setup_ConfiguracionColumnas(){
         ["UD_RIEGOS","LATITUD","Latitud","DEC","dato","","","","HID",996,false,false,false],
         ["UD_RIEGOS","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false],
         ["UD_RIEGOS","OBSERVACIONES","Observaciones","TEXTO","dato","","","","texto",60,false,false,true],
+        ["UD_RIEGOS","ELIMINADO","Eliminado","TEXTO","dato","","","","HID",995,false,false,false],
 
         //--------------------------------------------------
         // Las 15 columnas reales de UD_RESIDUOS_SOLIDOS. A
@@ -103,6 +104,7 @@ function SIG_Setup_ConfiguracionColumnas(){
         ["UD_RESIDUOS_SOLIDOS","PROYECTO","Proyecto (detalle)","TEXTO","dato","","","","texto",21,false,false,true],
         ["UD_RESIDUOS_SOLIDOS","SIG_GEOMETRIAS_ID","Geometría","NUM","FK","SIG_GEOMETRIAS","","","HID",998,false,false,false],
         ["UD_RESIDUOS_SOLIDOS","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false],
+        ["UD_RESIDUOS_SOLIDOS","ELIMINADO","Eliminado","TEXTO","dato","","","","HID",995,false,false,false],
 
         //--------------------------------------------------
         // Las 13 columnas de UD_FORESTACIONES, reescrita entera
@@ -127,7 +129,8 @@ function SIG_Setup_ConfiguracionColumnas(){
         ["UD_FORESTACIONES","TIPO_PLANTA","Tipo de planta","TEXTO","dato","","","","texto",12,true,false,true],
         ["UD_FORESTACIONES","PROPOSITO_ORIGINAL","Propósito (texto original)","TEXTO","dato","","","","texto",20,false,false,true],
         ["UD_FORESTACIONES","SIG_GEOMETRIAS_ID","Geometría","NUM","FK","SIG_GEOMETRIAS","","","HID",998,false,false,false],
-        ["UD_FORESTACIONES","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false]
+        ["UD_FORESTACIONES","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false],
+        ["UD_FORESTACIONES","ELIMINADO","Eliminado","TEXTO","dato","","","","HID",995,false,false,false]
 
     ];
 

@@ -91,6 +91,11 @@ SIG.Table = (()=>{
                 'class="btn btn-sm btn-outline-secondary btn-editar-registro" ' +
                 'title="Editar">' +
                 '<i class="bi bi-pencil-square"></i>' +
+                '</button> ' +
+                '<button type="button" ' +
+                'class="btn btn-sm btn-outline-danger btn-eliminar-registro" ' +
+                'title="Eliminar">' +
+                '<i class="bi bi-trash"></i>' +
                 '</button>'
 
         });
@@ -274,6 +279,51 @@ SIG.Table = (()=>{
     }
 
     //--------------------------------------------------
+    // Eliminar (baja lógica) un registro de la hoja actual
+    //--------------------------------------------------
+
+    async function eliminar(fila){
+
+        const seguro = await SIG.Utils.confirmar({
+
+            titulo: "¿Eliminar el registro con ID " + fila.ID + "?",
+
+            texto: "No se borra la fila de la hoja, queda marcada como " +
+                   "eliminada y deja de aparecer en tabla/mapa/resumen.",
+
+            confirmarTexto: "Eliminar"
+
+        });
+
+        if(!seguro){
+
+            return;
+
+        }
+
+        SIG.Loading.show("Eliminando...");
+
+        SIG.Utils
+
+            .run("SIG_UD_delete", currentHoja, fila.ID)
+
+            .then(reload)
+
+            .catch(error=>{
+
+                console.error("[SIG.Table] error en SIG_UD_delete:", error);
+
+                SIG.Loading.error(
+
+                    "No se pudo eliminar: " + error.message
+
+                );
+
+            });
+
+    }
+
+    //--------------------------------------------------
 
     function onError(error){
 
@@ -334,6 +384,24 @@ SIG.Table = (()=>{
                     .data();
 
                 SIG.Record.open(currentHoja, fila, reload);
+
+            }
+
+        );
+
+        $("#sig-table-contenido").on(
+
+            "click",
+            ".btn-eliminar-registro",
+            function(){
+
+                const fila = dataTable
+
+                    .row($(this).closest("tr"))
+
+                    .data();
+
+                eliminar(fila);
 
             }
 
