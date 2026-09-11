@@ -40,7 +40,9 @@ function SIG_Setup_ConfiguracionColumnas(){
     ];
 
     //--------------------------------------------------
-    // Piloto: las 32 columnas reales de UD_RIEGOS
+    // Piloto: las columnas reales de UD_RIEGOS (32 originales,
+    // -2 por LONGITUD/LATITUD dadas de baja, +3 por CEMENTO/
+    // FIERRO/GEOMEMBRANA_M2 — ver notas más abajo)
     //--------------------------------------------------
 
     const filas = [
@@ -73,11 +75,26 @@ function SIG_Setup_ConfiguracionColumnas(){
         ["UD_RIEGOS","GESTION","Gestión","NUM","dato","","","BAR","SEL",7,true,false,true],
         ["UD_RIEGOS","CIERRE_CONTABLE","Cierre contable","TEXTO","dato","","","","texto",53,false,false,true],
         ["UD_RIEGOS","SIG_GEOMETRIAS_ID","Geometría","NUM","FK","SIG_GEOMETRIAS","","","HID",998,false,false,false],
-        ["UD_RIEGOS","LONGITUD","Longitud","DEC","dato","","","","HID",997,false,false,false],
-        ["UD_RIEGOS","LATITUD","Latitud","DEC","dato","","","","HID",996,false,false,false],
+        // LONGITUD/LATITUD (columnas reales AR/AS de la hoja) se sacan
+        // de acá a propósito (2026-09-11): eran una segunda fuente de
+        // verdad de la ubicación, redundante con SIG_GEOMETRIAS_ID —
+        // se verificó que las 20 filas que tenían lon/lat también
+        // tenían SIG_GEOMETRIAS_ID cargado (0 filas dependían solo de
+        // esas columnas), así que no hay pérdida de datos al dejar de
+        // leerlas. Ver README, sección de importación de Riego. Las
+        // celdas siguen existiendo en la hoja (no se borraron), solo
+        // quedan fuera de CONFIGURACION_COLUMNAS y por lo tanto inertes
+        // para la app.
         ["UD_RIEGOS","DOCUMENTOS_ID","Documentos","NUM","FK","DOCUMENTOS","","","HID",999,false,false,false],
         ["UD_RIEGOS","OBSERVACIONES","Observaciones","TEXTO","dato","","","","texto",60,false,false,true],
         ["UD_RIEGOS","ELIMINADO","Eliminado","TEXTO","dato","","","","HID",995,false,false,false],
+        // CEMENTO/FIERRO/GEOMEMBRANA_M2: agregadas para la importación
+        // de los programas TANQUES/UGR/GEOMEMBRANA (categorías 8/9/10),
+        // ver README. Quedan vacías para los 114 proyectos previos —
+        // solo aplican a estos 3 programas nuevos.
+        ["UD_RIEGOS","CEMENTO","Cemento entregado (bolsas)","NUM","dato","","SUM","BAR","texto",35,true,false,true],
+        ["UD_RIEGOS","FIERRO","Fierro entregado (barras)","NUM","dato","","SUM","BAR","texto",36,true,false,true],
+        ["UD_RIEGOS","GEOMEMBRANA_M2","Geomembrana (m²)","DEC","dato","","SUM","BAR","texto",37,true,false,true],
 
         //--------------------------------------------------
         // Las 15 columnas reales de UD_RESIDUOS_SOLIDOS. A

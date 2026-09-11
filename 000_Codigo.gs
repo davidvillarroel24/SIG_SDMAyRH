@@ -3,7 +3,7 @@ function doGet() {
   return HtmlService
     .createTemplateFromFile("Index")
     .evaluate()
-    .setTitle("Motor SIG")
+    .setTitle("SIG SDMAyRH")
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 
 }

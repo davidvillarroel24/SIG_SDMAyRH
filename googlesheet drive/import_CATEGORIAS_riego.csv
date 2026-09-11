@@ -1,0 +1,13 @@
+NO USAR COMO APPEND. Los IDs 8, 9 y 10 ya existian en la hoja CATEGORIAS real
+(reservados, con el nombre en blanco) -- se verifico al escribir directo sobre
+la copia local. Pegar este CSV al final duplicaria esos 3 IDs.
+
+En su lugar, en la hoja CATEGORIAS real, completar a mano (o con Buscar y
+reemplazar de una celda vacia puntual) la columna CATEGORIAS de las filas que
+ya tienen ID=8, ID=9 e ID=10:
+
+ID 8  -> TANQUES
+ID 9  -> UGR
+ID 10 -> GEOMEMBRANA
+
+(La columna ELIMINADO de esas 3 filas se deja igual que estaba: vacia.)

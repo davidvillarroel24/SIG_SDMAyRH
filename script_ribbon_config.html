@@ -163,15 +163,7 @@ google.script.run
 
                     icon: "bi bi-eye",
 
-                    isActive: ()=>SIG.DataLayers.getEstado(u.hoja).visible,
-
-                    click: (btn)=>{
-
-                        const activo = SIG.DataLayers.toggleUnidad(u.hoja);
-
-                        btn.classList.toggle("active", activo);
-
-                    }
+                    click: ()=>SIG.DataLayers.toggleUnidad(u.hoja)
 
                 }
 
